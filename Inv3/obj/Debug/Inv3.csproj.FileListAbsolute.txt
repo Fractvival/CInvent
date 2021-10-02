@@ -1,0 +1,11 @@
+C:\Users\Admin\source\repos\Inv3\Inv3\bin\Debug\Inv3.exe
+C:\Users\Admin\source\repos\Inv3\Inv3\bin\Debug\Inv3.pdb
+C:\Users\Admin\source\repos\Inv3\Inv3\obj\Debug\Inv3.csproj.AssemblyReference.cache
+C:\Users\Admin\source\repos\Inv3\Inv3\obj\Debug\Inv3.Form1.resources
+C:\Users\Admin\source\repos\Inv3\Inv3\obj\Debug\Inv3.Properties.Resources.resources
+C:\Users\Admin\source\repos\Inv3\Inv3\obj\Debug\Inv3.csproj.GenerateResource.cache
+C:\Users\Admin\source\repos\Inv3\Inv3\obj\Debug\Inv3.csproj.CoreCompileInputs.cache
+C:\Users\Admin\source\repos\Inv3\Inv3\obj\Debug\Inv3.exe
+C:\Users\Admin\source\repos\Inv3\Inv3\obj\Debug\Inv3.pdb
+C:\Users\Admin\source\repos\Inv3\Inv3\obj\Debug\Inv3.Form2.resources
+C:\Users\Admin\source\repos\Inv3\Inv3\obj\Debug\Inv3.Form3.resources

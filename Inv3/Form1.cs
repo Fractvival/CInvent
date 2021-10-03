@@ -16,6 +16,7 @@ namespace Inv3
         public struct PART
         {
             public String ParentTag;
+            public String TreeFullPath;
             public String Name;
             public String PartNumber;
             public String KMZ;
@@ -65,7 +66,40 @@ namespace Inv3
             {
                 button2.Enabled = true;
             }
-            label4.Text = treeView1.SelectedNode.Nodes.Count.ToString();
+            String countPositions = "";
+            countPositions = treeView1.SelectedNode.Nodes.Count.ToString();
+            countPositions += " / ";
+            countPositions += treeView1.SelectedNode.GetNodeCount(true).ToString();
+            countPositions += "";
+            label4.Text = countPositions.ToString();
+
+            dataGridView1.Rows.Clear();
+            /*while (dataGridView1.Rows.Count > 0)
+            {
+                dataGridView1.Rows.RemoveAt(0);
+            }*/
+
+            int index = 0;
+            int count = 0;
+            for ( int i = 0; i < parts.Count; i++ )
+            {
+                if (treeView1.SelectedNode.FullPath.Equals(parts[i].TreeFullPath))
+                {
+                    index = dataGridView1.Rows.Add();
+                    dataGridView1.Rows[index].Cells[0].Value = parts[i].PartNumber;
+                    dataGridView1.Rows[index].Cells[1].Value = parts[i].Name;
+                    dataGridView1.Rows[index].Cells[2].Value = parts[i].Count;
+                    count++;
+                    //dataGridView1.Rows[index].Selected = true;
+                }
+            }
+
+            String countParts = "";
+            countParts = count.ToString();
+            countParts += " / ";
+            countParts += parts.Count.ToString();
+            countParts += "";
+            label3.Text = countParts.ToString();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -73,6 +107,8 @@ namespace Inv3
             if (MessageBox.Show("POZICE:>   ''"+treeView1.SelectedNode.Text+"''\r\n\r\nURČITĚ CHCEŠ  N E N Á V R A T N Ě  SMAZAT TUTO POZICI ?", "S M A Z Á N Í  POZICE!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
                 treeView1.SelectedNode.Remove();
+
+
             }
             treeView1.Focus();
         }
@@ -99,6 +135,8 @@ namespace Inv3
             if (form.DialogResult == DialogResult.OK)
             {
                 String tagPos = treeView1.SelectedNode.Tag.ToString();
+                String treeFullPath = treeView1.SelectedNode.FullPath.ToString();
+
                 Boolean isPart = false;
                 int partIndex = 0;
                 for (int i = 0; i < parts.Count; i++)
@@ -111,6 +149,7 @@ namespace Inv3
                     }
                 }
 
+                int addIndex = 0;
                 if ( isPart )
                 {
                     Console.Beep(500, 100);
@@ -118,7 +157,7 @@ namespace Inv3
                     Console.Beep(500, 100);
                     Console.Beep(900, 300);
                     Console.Beep(300, 100);
-                    DialogResult result = MessageBox.Show("TENTO  P A R T N U M B E R  UŽ SE NACHÁZÍ V DATABÁZI: \r\n=============================================\r\n\r\nPOZICE:>  " + parts[partIndex].ParentTag+ "\r\nPOČET:>  "+parts[partIndex].Count+ "\r\n\r\n=============================================\r\n\r\nANO = PŘIPSAT POČET TAM\r\n\r\nNE = PŘEPSAT VŠE SEM", "NALEZENA SHODA", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation);
+                    DialogResult result = MessageBox.Show("TENTO  P A R T N U M B E R  UŽ SE NACHÁZÍ V DATABÁZI: \r\n=============================================\r\n\r\nPOZICE:>  " + parts[partIndex].TreeFullPath+ "\r\nPOČET:>  "+parts[partIndex].Count+ "\r\n\r\n=============================================\r\n\r\nANO = PŘIPSAT POČET TAM\r\n\r\nNE = PŘEPSAT VŠE SEM", "NALEZENA SHODA", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation);
                     switch( result )
                     {
                         case DialogResult.Yes:
@@ -139,18 +178,29 @@ namespace Inv3
                     part.Name = form.partName;
                     part.Count = form.partCount.ToString();
                     part.ParentTag = tagPos;
+                    part.TreeFullPath = treeFullPath;
                     parts.Add(part);
-                    int index = dataGridView1.Rows.Add();
-                    dataGridView1.Rows[index].Cells[0].Value = form.partNumber;
-                    dataGridView1.Rows[index].Cells[1].Value = form.partName;
-                    dataGridView1.Rows[index].Cells[2].Value = form.partCount.ToString();
-                    dataGridView1.Rows[index].Selected = true;
+                    addIndex = dataGridView1.Rows.Add();
+                    dataGridView1.Rows[addIndex].Cells[0].Value = form.partNumber;
+                    dataGridView1.Rows[addIndex].Cells[1].Value = form.partName;
+                    dataGridView1.Rows[addIndex].Cells[2].Value = form.partCount.ToString();
+                    dataGridView1.Rows[addIndex].Selected = true;
+                    addIndex++;
                     treeView1.Focus();
                     Console.Beep(1300, 100);
                     Console.Beep(1500, 100);
                 }
+
+                String countParts = "";
+                countParts = addIndex.ToString();
+                countParts += " / ";
+                countParts += parts.Count.ToString();
+                countParts += "";
+                label3.Text = countParts.ToString();
+
             }
 
         }
+
     }
 }

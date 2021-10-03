@@ -65,7 +65,7 @@ namespace Inv3
             this.treeView1.HotTracking = true;
             this.treeView1.Location = new System.Drawing.Point(13, 12);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(365, 373);
+            this.treeView1.Size = new System.Drawing.Size(365, 408);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
@@ -162,7 +162,7 @@ namespace Inv3
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button1.Font = new System.Drawing.Font("Consolas", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button1.Location = new System.Drawing.Point(13, 392);
+            this.button1.Location = new System.Drawing.Point(13, 427);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(167, 46);
             this.button1.TabIndex = 3;
@@ -174,7 +174,7 @@ namespace Inv3
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button2.Font = new System.Drawing.Font("Consolas", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button2.Location = new System.Drawing.Point(257, 392);
+            this.button2.Location = new System.Drawing.Point(257, 427);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(121, 46);
             this.button2.TabIndex = 4;
@@ -199,7 +199,7 @@ namespace Inv3
             this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(543, 266);
+            this.dataGridView1.Size = new System.Drawing.Size(543, 301);
             this.dataGridView1.TabIndex = 5;
             // 
             // PartNumber
@@ -230,7 +230,7 @@ namespace Inv3
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button3.Font = new System.Drawing.Font("Consolas", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button3.Location = new System.Drawing.Point(385, 392);
+            this.button3.Location = new System.Drawing.Point(385, 427);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(167, 46);
             this.button3.TabIndex = 6;
@@ -241,7 +241,7 @@ namespace Inv3
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button4.Font = new System.Drawing.Font("Consolas", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button4.Location = new System.Drawing.Point(558, 391);
+            this.button4.Location = new System.Drawing.Point(558, 426);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(167, 46);
             this.button4.TabIndex = 7;
@@ -253,7 +253,7 @@ namespace Inv3
             // 
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button5.Font = new System.Drawing.Font("Consolas", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button5.Location = new System.Drawing.Point(807, 392);
+            this.button5.Location = new System.Drawing.Point(807, 427);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(121, 46);
             this.button5.TabIndex = 8;
@@ -264,7 +264,7 @@ namespace Inv3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(940, 450);
+            this.ClientSize = new System.Drawing.Size(940, 485);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);

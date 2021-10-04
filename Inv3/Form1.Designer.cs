@@ -51,6 +51,7 @@ namespace Inv3
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
+            this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             this.contextMenuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -236,6 +237,7 @@ namespace Inv3
             this.button3.TabIndex = 6;
             this.button3.Text = "NAČÍTAT";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button4
             // 
@@ -259,6 +261,11 @@ namespace Inv3
             this.button5.TabIndex = 8;
             this.button5.Text = "SMAZAT";
             this.button5.UseVisualStyleBackColor = true;
+            // 
+            // serialPort1
+            // 
+            this.serialPort1.PortName = "COM2";
+            this.serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort1_DataReceived);
             // 
             // Form1
             // 
@@ -307,6 +314,7 @@ namespace Inv3
         private System.Windows.Forms.DataGridViewTextBoxColumn PartName;
         private System.Windows.Forms.DataGridViewTextBoxColumn Count;
         private System.Windows.Forms.DataGridViewTextBoxColumn CountKat;
+        private System.IO.Ports.SerialPort serialPort1;
     }
 }
 

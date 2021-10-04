@@ -37,6 +37,10 @@ namespace Inv3
             newNode.Text = "SKLAD";
             newNode.Tag = "ROOT";
             treeView1.Nodes.Add(newNode);
+
+            
+
+
         }
 
 

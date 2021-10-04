@@ -29,6 +29,7 @@ namespace Inv3
         public Form1()
         {
             InitializeComponent();
+            treeView1.Nodes.
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -37,10 +38,7 @@ namespace Inv3
             newNode.Text = "SKLAD";
             newNode.Tag = "ROOT";
             treeView1.Nodes.Add(newNode);
-
-            
-
-
+            serialPort1.Open();
         }
 
 
@@ -111,8 +109,6 @@ namespace Inv3
             if (MessageBox.Show("POZICE:>   ''"+treeView1.SelectedNode.Text+"''\r\n\r\nURČITĚ CHCEŠ  N E N Á V R A T N Ě  SMAZAT TUTO POZICI ?", "S M A Z Á N Í  POZICE!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
                 treeView1.SelectedNode.Remove();
-
-
             }
             treeView1.Focus();
         }
@@ -121,15 +117,8 @@ namespace Inv3
 
         public Boolean AddPart(String PartNumber)
         {
-
-
-
             return true;
         }
-
-
-
-
 
 
         private void button4_Click(object sender, EventArgs e)
@@ -206,5 +195,15 @@ namespace Inv3
 
         }
 
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Form4 form = new Form4();
+            form.ShowDialog();
+        }
+
+        private void serialPort1_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
+        {
+            String data = serialPort1.ReadLine();
+        }
     }
 }

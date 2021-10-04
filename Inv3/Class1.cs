@@ -8,10 +8,12 @@ namespace Inv3
 {
     class TreeManager
     {
-        //string saveToFilePath = System.IO.Path.GetDirectoryName() + "\\" + filename;
+        String treeFile;
 
-        TreeManager()
+        public TreeManager(String FileName)
         {
+            treeFile = System.IO.Path.GetDirectoryName("");
+            treeFile += "\\tree.ini";
             
         }
 

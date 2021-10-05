@@ -31,11 +31,6 @@ namespace Inv3
         {
             this.components = new System.ComponentModel.Container();
             this.treeView1 = new System.Windows.Forms.TreeView();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.AddNodeStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.RenameNodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.EditNodeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.DeleteNodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -52,7 +47,6 @@ namespace Inv3
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
-            this.contextMenuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -61,48 +55,14 @@ namespace Inv3
             // 
             this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.treeView1.ContextMenuStrip = this.contextMenuStrip1;
             this.treeView1.Font = new System.Drawing.Font("Consolas", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.treeView1.FullRowSelect = true;
             this.treeView1.HotTracking = true;
             this.treeView1.Location = new System.Drawing.Point(13, 12);
             this.treeView1.Name = "treeView1";
             this.treeView1.Size = new System.Drawing.Size(365, 408);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
-            // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.AddNodeStripMenuItem,
-            this.RenameNodeToolStripMenuItem,
-            this.EditNodeToolStripMenuItem1,
-            this.DeleteNodeToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(156, 92);
-            // 
-            // AddNodeStripMenuItem
-            // 
-            this.AddNodeStripMenuItem.Name = "AddNodeStripMenuItem";
-            this.AddNodeStripMenuItem.Size = new System.Drawing.Size(155, 22);
-            this.AddNodeStripMenuItem.Text = "PRIDAT";
-            // 
-            // RenameNodeToolStripMenuItem
-            // 
-            this.RenameNodeToolStripMenuItem.Name = "RenameNodeToolStripMenuItem";
-            this.RenameNodeToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
-            this.RenameNodeToolStripMenuItem.Text = "PREJMENOVAT";
-            // 
-            // EditNodeToolStripMenuItem1
-            // 
-            this.EditNodeToolStripMenuItem1.Name = "EditNodeToolStripMenuItem1";
-            this.EditNodeToolStripMenuItem1.Size = new System.Drawing.Size(155, 22);
-            this.EditNodeToolStripMenuItem1.Text = "EDITOVAT";
-            // 
-            // DeleteNodeToolStripMenuItem
-            // 
-            this.DeleteNodeToolStripMenuItem.Name = "DeleteNodeToolStripMenuItem";
-            this.DeleteNodeToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
-            this.DeleteNodeToolStripMenuItem.Text = "SMAZAT";
             // 
             // groupBox1
             // 
@@ -284,7 +244,6 @@ namespace Inv3
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "CInvent";
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.contextMenuStrip1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
@@ -296,11 +255,6 @@ namespace Inv3
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem AddNodeStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem RenameNodeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem EditNodeToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem DeleteNodeToolStripMenuItem;
         public System.Windows.Forms.TreeView treeView1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace Inv3
 {
@@ -25,20 +26,132 @@ namespace Inv3
 
         public List<PART> parts = new List<PART>();
 
+        FileStream file;
+        StreamWriter writer;
+        StreamReader reader;
+
+        private void SaveTreeNonRecursive(TreeNode treeNode)
+        {
+            if (treeNode != null)
+            {
+                //Using a queue to store and process each node in the TreeView
+                Queue<TreeNode> staging = new Queue<TreeNode>();
+                staging.Enqueue(treeNode);
+
+                while (staging.Count > 0)
+                {
+                    treeNode = staging.Dequeue();
+
+                    //writer.WriteLine(treeNode.Tag);
+                    writer.WriteLine(">");
+                    writer.WriteLine(treeNode.Text);
+
+                    foreach (TreeNode node in treeNode.Nodes)
+                    {
+                        staging.Enqueue(node);
+                    }
+                }
+            }
+        }
+
+
+
+        public void SaveTree()
+        {
+            String FileName = Application.StartupPath.ToString() + @"\\save.ini";
+            if (File.Exists(FileName))
+                File.Delete(FileName);
+            file = new FileStream(FileName, FileMode.CreateNew);
+            file.Close();
+            file.Dispose();
+            writer = new StreamWriter(FileName);
+            foreach (TreeNode n in treeView1.Nodes)
+            {
+                SaveTreeNonRecursive(n);
+            }
+            writer.Close();
+            writer.Dispose();
+        }
+
+        public void LoadTree()
+        {
+            String _LineName = "";
+            String _LineTag = "";
+            List<TreeNode> nodes = new List<TreeNode>();
+            String FileName = Application.StartupPath.ToString() + @"\\save.ini";
+            //file = new FileStream(FileName, FileMode.CreateNew);
+            //file.Close();
+            //file.Dispose();
+            reader = new StreamReader(FileName);
+            int mode = 0;
+            while ((_LineName = reader.ReadLine()) != null)
+            {
+                switch(mode)
+                {
+                    case 0:
+                        {
+                            break;
+                        }
+                    case 1:
+                        {
+                            break;
+                        }
+
+                }
+                _LineTag = reader.ReadLine();
+                TreeNode nod = new TreeNode();
+                nod.Text = _LineName;
+                nod.Tag = _LineTag;
+                nodes.Add(nod);
+                _LineName = "";
+                _LineTag = "";
+            }
+            reader.Close();
+            reader.Dispose();
+
+
+        }
+
 
         public Form1()
         {
             InitializeComponent();
-            treeView1.Nodes.
+
+            
+            treeView1.BeginUpdate();
+                        
+            
+            TreeNode node = new TreeNode();
+            TreeNode node1 = new TreeNode();
+            TreeNode node2 = new TreeNode();
+            TreeNode node3 = new TreeNode();
+            node.Text = "SKLAD";
+            node.Tag = "ROOT";
+            treeView1.Nodes.Add(node);
+            node1.Text = "10";
+            node1.Tag = "ROOT";
+            treeView1.Nodes[0].Nodes.Add(node1);
+            node2.Text = "15";
+            node2.Tag = "ROOT";
+            treeView1.Nodes[0].Nodes.Add(node2);
+            node3.Text = "20";
+            node3.Tag = "15";
+            treeView1.Nodes[0].Nodes[1].Nodes.Add(node3);
+            
+
+            treeView1.EndUpdate();
+            treeView1.ExpandAll();
+
+            SaveTree();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            TreeNode newNode = new TreeNode();
-            newNode.Text = "SKLAD";
-            newNode.Tag = "ROOT";
-            treeView1.Nodes.Add(newNode);
+            // Pred zobrazenim Form1 otevreme COM port
             serialPort1.Open();
+
+
+
         }
 
 
@@ -49,12 +162,23 @@ namespace Inv3
             form.ShowDialog();
             if (form.DialogResult == DialogResult.OK)
             {
-                addTree.Text = form.newNodeText;
-                addTree.Tag = form.newNodeText;
-                treeView1.SelectedNode.Nodes.Add(addTree);
-                treeView1.SelectedNode.Expand();
-                treeView1.SelectedNode = addTree;
-                treeView1.Focus();
+                if (treeView1.Nodes.Count > 0)
+                {
+                    addTree.Text = form.newNodeText;
+                    addTree.Tag = form.newNodeText;
+                    treeView1.SelectedNode.Nodes.Add(addTree);
+                    treeView1.SelectedNode.Expand();
+                    treeView1.SelectedNode = addTree;
+                    treeView1.Focus();
+                }
+                else
+                {
+                    addTree.Text = form.newNodeText;
+                    addTree.Tag = "ROOT";
+                    treeView1.Nodes.Add(addTree);
+                    treeView1.SelectedNode = addTree;
+                    treeView1.Focus();
+                }
             }
         }
 
@@ -76,10 +200,6 @@ namespace Inv3
             label4.Text = countPositions.ToString();
 
             dataGridView1.Rows.Clear();
-            /*while (dataGridView1.Rows.Count > 0)
-            {
-                dataGridView1.Rows.RemoveAt(0);
-            }*/
 
             int index = 0;
             int count = 0;

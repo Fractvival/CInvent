@@ -8,7 +8,6 @@ C:\Users\Admin\source\repos\Inv3\Inv3\obj\Debug\Inv3.exe
 C:\Users\Admin\source\repos\Inv3\Inv3\obj\Debug\Inv3.pdb
 C:\Users\Admin\source\repos\Inv3\Inv3\obj\Debug\Inv3.Form2.resources
 C:\Users\Admin\source\repos\Inv3\Inv3\obj\Debug\Inv3.Form3.resources
-C:\Users\Admin\Source\Repos\Inv3\Inv3\obj\Debug\Inv3.csproj.AssemblyReference.cache
 C:\Users\Admin\Source\Repos\CInvent\Inv3\bin\Debug\Inv3.exe
 C:\Users\Admin\Source\Repos\CInvent\Inv3\bin\Debug\Inv3.pdb
 C:\Users\Admin\Source\Repos\CInvent\Inv3\obj\Debug\Inv3.csprojAssemblyReference.cache
@@ -21,3 +20,5 @@ C:\Users\Admin\Source\Repos\CInvent\Inv3\obj\Debug\Inv3.csproj.GenerateResource.
 C:\Users\Admin\Source\Repos\CInvent\Inv3\obj\Debug\Inv3.csproj.CoreCompileInputs.cache
 C:\Users\Admin\Source\Repos\CInvent\Inv3\obj\Debug\Inv3.exe
 C:\Users\Admin\Source\Repos\CInvent\Inv3\obj\Debug\Inv3.pdb
+C:\Users\Admin\Source\Repos\Inv3\Inv3\obj\Debug\Inv3.csprojAssemblyReference.cache
+C:\Users\Admin\Source\Repos\Inv3\Inv3\obj\Debug\Inv3.Form4.resources

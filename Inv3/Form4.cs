@@ -16,18 +16,6 @@ namespace Inv3
         public Form4()
         {
             InitializeComponent();
-
-
-
-
-
-        }
-
-
-        private void serialPort1_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
-        {
-
-
         }
     }
 }

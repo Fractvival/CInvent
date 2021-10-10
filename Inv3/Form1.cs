@@ -1,4 +1,5 @@
-﻿using System;
+﻿//using Microsoft.Office.Interop.Excel;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,11 +9,21 @@ using System.Text;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace Inv3
 {
     public partial class Form1 : Form
     {
+        public struct SETTING
+        {
+            public String NameRoot;
+            public String ComName;
+            public String ImportFolder;
+            public String ExcelSearch;
+            public String AutoRePath;
+        }
 
         public struct PART
         {
@@ -22,94 +33,51 @@ namespace Inv3
             public String PartNumber;
             public String KMZ;
             public String Count;
+            public String OficialCount;
+
         }
 
-        public List<PART> parts = new List<PART>();
-
-        FileStream file;
-        StreamWriter writer;
-        StreamReader reader;
-
-        private void SaveTreeNonRecursive(TreeNode treeNode)
+        public struct KAT
         {
-            if (treeNode != null)
+            public String KMZ;
+            public String Text;
+            public String Count;
+        }
+
+        public List<KAT> katList = new List<KAT>();
+        public List<PART> partList = new List<PART>();
+        public SETTING setting = new SETTING() { NameRoot="SKLAD", ComName="COM2", 
+            ExcelSearch="*.xlsx", ImportFolder="import", AutoRePath="false" };
+        String Katalog = "";
+
+        Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
+
+        public static void SaveTree(TreeView tree)
+        {
+            String filename = System.Windows.Forms.Application.StartupPath.ToString() + @"\\tree.dat";
+            if (File.Exists(filename))
+                File.Delete(filename);
+            using (Stream file = File.Open(filename, FileMode.Create))
             {
-                //Using a queue to store and process each node in the TreeView
-                Queue<TreeNode> staging = new Queue<TreeNode>();
-                staging.Enqueue(treeNode);
+                BinaryFormatter bf = new BinaryFormatter();
+                bf.Serialize(file, tree.Nodes.Cast<TreeNode>().ToList());
+            }
+        }
 
-                while (staging.Count > 0)
+        public static void LoadTree(TreeView tree)
+        {
+            String filename = System.Windows.Forms.Application.StartupPath.ToString() + @"\\tree.dat";
+            if (File.Exists(filename))
+            {
+                using (Stream file = File.Open(filename, FileMode.Open))
                 {
-                    treeNode = staging.Dequeue();
+                    BinaryFormatter bf = new BinaryFormatter();
+                    object obj = bf.Deserialize(file);
 
-                    //writer.WriteLine(treeNode.Tag);
-                    writer.WriteLine(">");
-                    writer.WriteLine(treeNode.Text);
-
-                    foreach (TreeNode node in treeNode.Nodes)
-                    {
-                        staging.Enqueue(node);
-                    }
+                    TreeNode[] nodeList = (obj as IEnumerable<TreeNode>).ToArray();
+                    tree.Nodes.AddRange(nodeList);
                 }
             }
-        }
-
-
-
-        public void SaveTree()
-        {
-            String FileName = Application.StartupPath.ToString() + @"\\save.ini";
-            if (File.Exists(FileName))
-                File.Delete(FileName);
-            file = new FileStream(FileName, FileMode.CreateNew);
-            file.Close();
-            file.Dispose();
-            writer = new StreamWriter(FileName);
-            foreach (TreeNode n in treeView1.Nodes)
-            {
-                SaveTreeNonRecursive(n);
-            }
-            writer.Close();
-            writer.Dispose();
-        }
-
-        public void LoadTree()
-        {
-            String _LineName = "";
-            String _LineTag = "";
-            List<TreeNode> nodes = new List<TreeNode>();
-            String FileName = Application.StartupPath.ToString() + @"\\save.ini";
-            //file = new FileStream(FileName, FileMode.CreateNew);
-            //file.Close();
-            //file.Dispose();
-            reader = new StreamReader(FileName);
-            int mode = 0;
-            while ((_LineName = reader.ReadLine()) != null)
-            {
-                switch(mode)
-                {
-                    case 0:
-                        {
-                            break;
-                        }
-                    case 1:
-                        {
-                            break;
-                        }
-
-                }
-                _LineTag = reader.ReadLine();
-                TreeNode nod = new TreeNode();
-                nod.Text = _LineName;
-                nod.Tag = _LineTag;
-                nodes.Add(nod);
-                _LineName = "";
-                _LineTag = "";
-            }
-            reader.Close();
-            reader.Dispose();
-
-
         }
 
 
@@ -117,41 +85,62 @@ namespace Inv3
         {
             InitializeComponent();
 
-            
+            Form4 form = new Form4();
+            form.Show();
+
             treeView1.BeginUpdate();
-                        
-            
-            TreeNode node = new TreeNode();
-            TreeNode node1 = new TreeNode();
-            TreeNode node2 = new TreeNode();
-            TreeNode node3 = new TreeNode();
-            node.Text = "SKLAD";
-            node.Tag = "ROOT";
-            treeView1.Nodes.Add(node);
-            node1.Text = "10";
-            node1.Tag = "ROOT";
-            treeView1.Nodes[0].Nodes.Add(node1);
-            node2.Text = "15";
-            node2.Tag = "ROOT";
-            treeView1.Nodes[0].Nodes.Add(node2);
-            node3.Text = "20";
-            node3.Tag = "15";
-            treeView1.Nodes[0].Nodes[1].Nodes.Add(node3);
-            
+            LoadTree(treeView1);
+
+            if (treeView1.Nodes.Count == 0)
+            {
+                TreeNode addTree = new TreeNode { Text=setting.NameRoot, Tag="ROOT" };
+                treeView1.Nodes.Add(addTree);
+                treeView1.SelectedNode = addTree;
+                treeView1.Focus();
+            }
 
             treeView1.EndUpdate();
             treeView1.ExpandAll();
+            
+            serialPort1.Open();
 
-            SaveTree();
+            String pathname = System.Windows.Forms.Application.StartupPath.ToString();
+            if (!Directory.Exists(pathname+@"\\"+setting.ImportFolder))
+            {
+                Directory.CreateDirectory(pathname+@"\\"+setting.ImportFolder);
+            }
+            pathname += "\\"+setting.ImportFolder;
+            String[] names = Directory.GetFiles(pathname, setting.ExcelSearch);
+            Katalog = names[0].ToString();
+
+            Excel.Application xlApp;
+            Excel.Workbook wb;
+            Excel.Worksheet sheet;
+            Excel.Range range;
+            object misValue = System.Reflection.Missing.Value;
+            xlApp = new Excel.Application();
+            wb = xlApp.Workbooks.Open(Katalog, 0, true, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
+            sheet = (Excel.Worksheet)wb.Worksheets.get_Item(1);
+            int lastRow = sheet.Cells.SpecialCells(Excel.XlCellType.xlCellTypeLastCell).Row;
+            range = sheet.Range["B6","C"+lastRow.ToString()];
+            int rowCount = range.Rows.Count;
+            int colCount = range.Columns.Count;
+            for (int i = 1; i <= rowCount; i++)
+            {
+                katList.Add(new KAT 
+                {
+                    KMZ = range.Cells[i, 1].Value2.Substring(0,10).ToString(),
+                    Text = range.Cells[i,1].Value2.Remove(0,15).ToString(), 
+                    Count = range.Cells[i, 2].Value2.ToString() 
+                } ) ;
+            }
+            wb.Close(true, misValue, misValue);
+            xlApp.Quit();
+            form.Close();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // Pred zobrazenim Form1 otevreme COM port
-            serialPort1.Open();
-
-
-
         }
 
 
@@ -162,25 +151,25 @@ namespace Inv3
             form.ShowDialog();
             if (form.DialogResult == DialogResult.OK)
             {
-                if (treeView1.Nodes.Count > 0)
-                {
-                    addTree.Text = form.newNodeText;
-                    addTree.Tag = form.newNodeText;
-                    treeView1.SelectedNode.Nodes.Add(addTree);
-                    treeView1.SelectedNode.Expand();
-                    treeView1.SelectedNode = addTree;
-                    treeView1.Focus();
-                }
-                else
-                {
-                    addTree.Text = form.newNodeText;
-                    addTree.Tag = "ROOT";
-                    treeView1.Nodes.Add(addTree);
-                    treeView1.SelectedNode = addTree;
-                    treeView1.Focus();
-                }
+                addTree.Text = form.newNodeText;
+                addTree.Tag = form.newNodeText;
+                treeView1.SelectedNode.Nodes.Add(addTree);
+                treeView1.SelectedNode.Expand();
+                treeView1.SelectedNode = addTree;
+                treeView1.Focus();
+                SaveTree(treeView1);
             }
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("POZICE:>   ''" + treeView1.SelectedNode.Text + "''\r\n\r\nURČITĚ CHCEŠ  N E N Á V R A T N Ě  SMAZAT TUTO POZICI ?", "S M A Z Á N Í  POZICE!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            {
+                treeView1.SelectedNode.Remove();
+            }
+            treeView1.Focus();
+        }
+
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
@@ -192,9 +181,10 @@ namespace Inv3
             {
                 button2.Enabled = true;
             }
+
             String countPositions = "";
             countPositions = treeView1.SelectedNode.Nodes.Count.ToString();
-            countPositions += " / ";
+            countPositions += "/";
             countPositions += treeView1.SelectedNode.GetNodeCount(true).ToString();
             countPositions += "";
             label4.Text = countPositions.ToString();
@@ -203,14 +193,15 @@ namespace Inv3
 
             int index = 0;
             int count = 0;
-            for ( int i = 0; i < parts.Count; i++ )
+            for ( int i = 0; i < partList.Count; i++ )
             {
-                if (treeView1.SelectedNode.FullPath.Equals(parts[i].TreeFullPath))
+                if (treeView1.SelectedNode.FullPath.Equals(partList[i].TreeFullPath))
                 {
                     index = dataGridView1.Rows.Add();
-                    dataGridView1.Rows[index].Cells[0].Value = parts[i].PartNumber;
-                    dataGridView1.Rows[index].Cells[1].Value = parts[i].Name;
-                    dataGridView1.Rows[index].Cells[2].Value = parts[i].Count;
+                    dataGridView1.Rows[index].Cells[0].Value = partList[i].PartNumber;
+                    dataGridView1.Rows[index].Cells[1].Value = partList[i].Name;
+                    dataGridView1.Rows[index].Cells[2].Value = partList[i].Count;
+                    dataGridView1.Rows[index].Cells[3].Value = partList[i].OficialCount;
                     count++;
                     //dataGridView1.Rows[index].Selected = true;
                 }
@@ -218,112 +209,131 @@ namespace Inv3
 
             String countParts = "";
             countParts = count.ToString();
-            countParts += " / ";
-            countParts += parts.Count.ToString();
+            countParts += "/";
+            countParts += partList.Count.ToString();
             countParts += "";
             label3.Text = countParts.ToString();
+            label5.Text = treeView1.SelectedNode.FullPath;
         }
 
-        private void button2_Click(object sender, EventArgs e)
+
+        public int IsKMZinPartList( String KMZ )
         {
-            if (MessageBox.Show("POZICE:>   ''"+treeView1.SelectedNode.Text+"''\r\n\r\nURČITĚ CHCEŠ  N E N Á V R A T N Ě  SMAZAT TUTO POZICI ?", "S M A Z Á N Í  POZICE!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            for ( int i = 0; i < partList.Count; i++ )
             {
-                treeView1.SelectedNode.Remove();
+                if (partList[i].KMZ.Equals(KMZ))
+                    return i;
             }
-            treeView1.Focus();
+            return -1;
         }
 
-
-
-        public Boolean AddPart(String PartNumber)
+        public int IsPartNumberinPartList(String PartNumber)
         {
+            for (int i = 0; i < partList.Count; i++)
+            {
+                if (partList[i].PartNumber.Equals(PartNumber))
+                    return i;
+            }
+            return -1;
+        }
+
+        public Boolean AddPart(PART item)
+        {
+            Boolean isTypeKMZ = false;
+            Boolean isTypePartNumber = false;
+            String treeSelectPath = treeView1.SelectedNode.FullPath;
+
+            if (item.KMZ.Length > 0)
+                isTypeKMZ = true;
+            if (item.PartNumber.Length > 0)
+                isTypePartNumber = true;
+
+            if ( isTypePartNumber )
+            {
+                int indexPartList = IsPartNumberinPartList(item.PartNumber);
+                if ( indexPartList != -1 )
+                {
+                    if ( partList[indexPartList].TreeFullPath.Equals(treeSelectPath) )
+                    {
+                        int iCount = Int32.Parse(partList[indexPartList].Count);
+                        iCount++;
+                        PART saveItem = new PART();
+                        saveItem = partList[indexPartList];
+                        saveItem.Count = iCount.ToString();
+                        partList.RemoveAt(indexPartList);
+                        partList.Add(saveItem);
+                    }
+                    else
+                    { 
+                    }
+                }
+                else
+                {
+
+                }
+            }
+            else if ( isTypeKMZ )
+            {
+
+            }
+            else
+            {
+
+            }
+
             return true;
         }
 
-
+        // PRIDAT NOVY DIL
         private void button4_Click(object sender, EventArgs e)
         {
             Form3 form = new Form3();
             form.ShowDialog();
             if (form.DialogResult == DialogResult.OK)
             {
-                String tagPos = treeView1.SelectedNode.Tag.ToString();
-                String treeFullPath = treeView1.SelectedNode.FullPath.ToString();
-
-                Boolean isPart = false;
-                int partIndex = 0;
-                for (int i = 0; i < parts.Count; i++)
-                {
-                    if ( parts[i].PartNumber == form.partNumber )
-                    {
-                        isPart = true;
-                        partIndex = i;
-                        break;
-                    }
-                }
-
-                int addIndex = 0;
-                if ( isPart )
-                {
-                    Console.Beep(500, 100);
-                    Console.Beep(500, 100);
-                    Console.Beep(500, 100);
-                    Console.Beep(900, 300);
-                    Console.Beep(300, 100);
-                    DialogResult result = MessageBox.Show("TENTO  P A R T N U M B E R  UŽ SE NACHÁZÍ V DATABÁZI: \r\n=============================================\r\n\r\nPOZICE:>  " + parts[partIndex].TreeFullPath+ "\r\nPOČET:>  "+parts[partIndex].Count+ "\r\n\r\n=============================================\r\n\r\nANO = PŘIPSAT POČET TAM\r\n\r\nNE = PŘEPSAT VŠE SEM", "NALEZENA SHODA", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation);
-                    switch( result )
-                    {
-                        case DialogResult.Yes:
-                            {
-                                break;
-                            }
-                        case DialogResult.No:
-                            {
-                                break;
-                            }
-                    }
-                    treeView1.Focus();
-                }
-                else
-                {
-                    PART part = new PART();
-                    part.PartNumber = form.partNumber;
-                    part.Name = form.partName;
-                    part.Count = form.partCount.ToString();
-                    part.ParentTag = tagPos;
-                    part.TreeFullPath = treeFullPath;
-                    parts.Add(part);
-                    addIndex = dataGridView1.Rows.Add();
-                    dataGridView1.Rows[addIndex].Cells[0].Value = form.partNumber;
-                    dataGridView1.Rows[addIndex].Cells[1].Value = form.partName;
-                    dataGridView1.Rows[addIndex].Cells[2].Value = form.partCount.ToString();
-                    dataGridView1.Rows[addIndex].Selected = true;
-                    addIndex++;
-                    treeView1.Focus();
-                    Console.Beep(1300, 100);
-                    Console.Beep(1500, 100);
-                }
-
-                String countParts = "";
-                countParts = addIndex.ToString();
-                countParts += " / ";
-                countParts += parts.Count.ToString();
-                countParts += "";
-                label3.Text = countParts.ToString();
-
+                AddPart(new PART { 
+                    KMZ = form.KMZ, 
+                    PartNumber = form.partNumber, 
+                    Name = form.partName, 
+                    });
             }
 
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            Form4 form = new Form4();
-            form.ShowDialog();
         }
 
         private void serialPort1_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
             String data = serialPort1.ReadLine();
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SaveTree(treeView1);
+        }
+
+        private void dataGridView1_DoubleClick(object sender, EventArgs e)
+        {
+            if (dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].IsNewRow)
+            {
+                MessageBox.Show("NEMA DATA");
+            }
+            else 
+            {
+                MessageBox.Show("MA DATA");
+            }
+        }
+
+        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void xLSToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

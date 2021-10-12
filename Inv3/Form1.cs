@@ -9,6 +9,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.IO;
+using System.Management;
 using System.Runtime.Serialization.Formatters.Binary;
 using Excel = Microsoft.Office.Interop.Excel;
 
@@ -68,11 +69,11 @@ namespace Inv3
         }
 
         // Tento seznam je nactem z oficialniho XLS dokumentu o skladu
-        public List<KAT> katList = new List<KAT>();
+        public static List<KAT> katList = new List<KAT>();
         // Tento seznam obsahuje vsechny bud rucne pridane nebo naskenovane dily
-        public List<PART> partList = new List<PART>();
+        public static List<PART> partList = new List<PART>();
         // Zde je obsazeno nastaveni programu
-        public SETTING setting = new SETTING()
+        public static SETTING setting = new SETTING()
         {
             NameRoot = "SKLAD",
             ComName = "COM2",
@@ -86,32 +87,229 @@ namespace Inv3
 
         Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
 
+
+        public static void SavePart()
+        {
+            String filename = System.Windows.Forms.Application.StartupPath.ToString() + @"\\part.dat";
+            try
+            {
+                if (File.Exists(filename))
+                    File.Delete(filename);
+                StreamWriter writer = new StreamWriter(filename);
+                for ( int i = 0; i < partList.Count; i++ )
+                {
+                    writer.WriteLine(partList[i].KMZ);
+                    writer.WriteLine(partList[i].PartNumber);
+                    writer.WriteLine(partList[i].Name);
+                    writer.WriteLine(partList[i].Count);
+                    writer.WriteLine(partList[i].OficialCount);
+                    writer.WriteLine(partList[i].TreeFullPath);
+                    writer.WriteLine(partList[i].ParentTag);
+                }
+                writer.Close();
+            }
+            catch(IOException ioEx)
+            {
+                MessageBox.Show("NASTALY PROBLÉMY PŘI UKLÁDÁNÍ SEZNAMU DÍLŮ !!\r\n\r\n" +
+                    ioEx.Message + "\r\n\r\n" +
+                    "ZKONTROLUJ ZDA SE exe soubor PROGRAMU NACHÁZÍ\r\n" +
+                    "NA MÍSTĚ S POVOLENÝM ZÁPISEM NA DISK", "PROBLÉM V UKLÁDÁNÍ SEZNAMU DÍLŮ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        public static void LoadPart()
+        {
+            String filename = System.Windows.Forms.Application.StartupPath.ToString() + @"\\part.dat";
+            if (File.Exists(filename))
+            {
+                try
+                {
+                    StreamReader reader = new StreamReader(filename);
+                    while ( !reader.EndOfStream )
+                    {
+                        partList.Add(new PART
+                        {
+                            KMZ = reader.ReadLine(),
+                            PartNumber = reader.ReadLine(),
+                            Name = reader.ReadLine(),
+                            Count = reader.ReadLine(),
+                            OficialCount = reader.ReadLine(),
+                            TreeFullPath = reader.ReadLine(),
+                            ParentTag = reader.ReadLine()
+                        }); ;
+                    }
+                    reader.Close();
+                }
+                catch 
+                {
+                }
+            }
+        }
+
+
         public static void SaveTree(TreeView tree)
         {
             String filename = System.Windows.Forms.Application.StartupPath.ToString() + @"\\tree.dat";
-            if (File.Exists(filename))
-                File.Delete(filename);
-            using (Stream file = File.Open(filename, FileMode.Create))
+            try
             {
-                BinaryFormatter bf = new BinaryFormatter();
-                bf.Serialize(file, tree.Nodes.Cast<TreeNode>().ToList());
+                if (File.Exists(filename))
+                    File.Delete(filename);
+                using (Stream file = File.Open(filename, FileMode.Create))
+                {
+                    BinaryFormatter bf = new BinaryFormatter();
+                    bf.Serialize(file, tree.Nodes.Cast<TreeNode>().ToList());
+                }
+            }
+            catch(IOException ioEx)
+            {
+                MessageBox.Show("NASTALY PROBLÉMY PŘI UKLÁDÁNÍ SEZNAMU POZIC\r\n\r\n" +
+                    ioEx.Message + "\r\n\r\n" +
+                    "ZKONTROLUJ ZDA SE exe soubor PROGRAMU NACHÁZÍ\r\n" +
+                    "NA MÍSTĚ S POVOLENÝM ZÁPISEM NA DISK", "PROBLÉM V UKLÁDÁNÍ NASTAVENÍ", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
         public static void LoadTree(TreeView tree)
         {
             String filename = System.Windows.Forms.Application.StartupPath.ToString() + @"\\tree.dat";
-            if (File.Exists(filename))
+            try
             {
-                using (Stream file = File.Open(filename, FileMode.Open))
+                if (File.Exists(filename))
                 {
-                    BinaryFormatter bf = new BinaryFormatter();
-                    object obj = bf.Deserialize(file);
+                    using (Stream file = File.Open(filename, FileMode.Open))
+                    {
+                        BinaryFormatter bf = new BinaryFormatter();
+                        object obj = bf.Deserialize(file);
 
-                    TreeNode[] nodeList = (obj as IEnumerable<TreeNode>).ToArray();
-                    tree.Nodes.AddRange(nodeList);
+                        TreeNode[] nodeList = (obj as IEnumerable<TreeNode>).ToArray();
+                        tree.Nodes.AddRange(nodeList);
+                    }
                 }
             }
+            catch(IOException ioEx)
+            {
+
+            }
+        }
+
+        public static void SaveSetting()
+        {
+            String filename = System.Windows.Forms.Application.StartupPath.ToString() + @"\\setting.dat";
+            try
+            {
+                if (File.Exists(filename))
+                    File.Delete(filename);
+                StreamWriter writer = new StreamWriter(filename, false);
+                writer.WriteLine(setting.NameRoot);
+                writer.WriteLine(setting.ImportFolder);
+                writer.WriteLine(setting.ExcelSearch);
+                writer.WriteLine(setting.ComName);
+                writer.WriteLine(setting.AutoRePath);
+                writer.WriteLine(setting.AutoAddInfo);
+                writer.Close();
+            }
+            catch (IOException ioEx)
+            {
+                MessageBox.Show("NASTALY PROBLÉMY PŘI UKLÁDÁNÍ NASTAVENÍ PROGRAMU\r\n\r\n" +
+                    ioEx.Message + "\r\n\r\n" +
+                    "ZKONTROLUJ ZDA SE exe soubor PROGRAMU NACHÁZÍ\r\n" +
+                    "NA MÍSTĚ S POVOLENÝM ZÁPISEM NA DISK", "PROBLÉM V UKLÁDÁNÍ NASTAVENÍ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        public static void LoadSetting()
+        {
+            String filename = System.Windows.Forms.Application.StartupPath.ToString() + @"\\setting.dat";
+            try
+            {
+                StreamReader reader = new StreamReader(filename);
+                setting.NameRoot = reader.ReadLine();
+                setting.ImportFolder = reader.ReadLine();
+                setting.ExcelSearch = reader.ReadLine();
+                setting.ComName = reader.ReadLine();
+                setting.AutoRePath = reader.ReadLine();
+                setting.AutoAddInfo = reader.ReadLine();
+                reader.Close();
+            }
+            catch (IOException ioEx)
+            {
+                MessageBox.Show("NASTALY PROBLÉMY PŘI NAČÍTÁNÍ NASTAVENÍ PROGRAMU\r\n\r\n" +
+                    ioEx.Message + "\r\n\r\n" +
+                    "ZKONTROLUJ ZDA SE exe soubor PROGRAMU NACHÁZÍ\r\n" +
+                    "NA MÍSTĚ S POVOLENÝM ZÁPISEM NA DISK", "PROBLÉM V NAČÍTÁNÍ NASTAVENÍ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void MenuSettingPort_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            Boolean isErr = false;
+            try
+            {
+                if (serialPort1.IsOpen)
+                    serialPort1.Close();
+                serialPort1.PortName = e.ClickedItem.Text;
+                serialPort1.Open();
+                //serialPort1.Close();
+            }
+            catch(IOException io)
+            {
+                isErr = true;
+            }
+            if ( isErr )
+            {
+                toolStripStatusLabel1.Text = ">> CHYBA PORTU !";
+                Console.Beep(500, 100);
+                Console.Beep(500, 100);
+            }
+            else
+            {
+                toolStripStatusLabel1.Text = ">> SKENER NA "+serialPort1.PortName;
+                setting.ComName = serialPort1.PortName;
+                Console.Beep(1300, 80);
+                Console.Beep(1500, 80);
+                Console.Beep(1300, 80);
+            }
+        }
+
+        public void InitPort()
+        {
+            MenuSettingPort.DropDownItems.Clear();
+            Boolean isErr = false;
+            for ( int i = 1; i < 25; i++ )
+            {
+                isErr = false;
+                try
+                {
+                    serialPort1.PortName = "COM" + i.ToString();
+                    serialPort1.Open();
+                    serialPort1.Close();
+                }
+                catch(IOException ioEx)
+                {
+                    isErr = true;
+                }
+                if (!isErr)
+                    MenuSettingPort.DropDownItems.Add(serialPort1.PortName.ToString());
+            }
+            isErr = false;
+            try
+            {
+                if (serialPort1.IsOpen)
+                    serialPort1.Close();
+                serialPort1.PortName = setting.ComName;
+                serialPort1.Open();
+            }
+            catch (IOException ioEx)
+            {
+                isErr = true;
+                toolStripStatusLabel1.Text = ">> CHYBA PORTU !" + serialPort1.PortName;
+                MessageBox.Show("NELZE OTEVŘÍT COM PORT SKENERU\r\n\r\n" +
+                    ioEx.Message + "\r\n\r\n" +
+                    "V NASTAVENÍ PROGRAMU ZVOL Z DOSTUPNÝCH COM PORTŮ\r\n" +
+                    "", "PROBLÉM COM PORTU SKENERU", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            if (!isErr)
+                toolStripStatusLabel1.Text = ">> SKENER NA " + serialPort1.PortName;
         }
 
 
@@ -119,12 +317,13 @@ namespace Inv3
         {
             InitializeComponent();
 
-            Form4 form = new Form4();
-            form.Show();
+            LoadSetting();
+            InitPort();
+            LoadPart();
+
 
             treeView1.BeginUpdate();
             LoadTree(treeView1);
-
             if (treeView1.Nodes.Count == 0)
             {
                 TreeNode addTree = new TreeNode { Text = setting.NameRoot, Tag = "ROOT" };
@@ -132,51 +331,71 @@ namespace Inv3
                 treeView1.SelectedNode = addTree;
                 treeView1.Focus();
             }
-
             treeView1.EndUpdate();
             treeView1.ExpandAll();
-
-            try
-            {
-                serialPort1.Open();
-            }
-            catch
-            {
-                MessageBox.Show("PORT NELZE OTEVRIT", "COM PORT CHYBA", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
 
             String pathname = System.Windows.Forms.Application.StartupPath.ToString();
             if (!Directory.Exists(pathname + @"\\" + setting.ImportFolder))
             {
-                Directory.CreateDirectory(pathname + @"\\" + setting.ImportFolder);
+                try
+                {
+                    Directory.CreateDirectory(pathname + @"\\" + setting.ImportFolder);
+                }
+                catch(IOException ioEx)
+                {
+                    MessageBox.Show("NASTAL PROBLÉM INICIALIZACE IMPORTNÍ SLOŽKY\r\n\r\n" +
+                        ioEx.Message + "\r\n\r\n" +
+                        "ZKONTROLUJ ZDA SE exe soubor PROGRAMU\r\n"+
+                        "NACHÁZÍ NA MÍSTĚ S POVOLENÝM ZÁPISEM NA DISK", "PROBLÉM SLOŽKY PRO IMPORT", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
             pathname += "\\" + setting.ImportFolder;
-            String[] names = Directory.GetFiles(pathname, setting.ExcelSearch);
-            Katalog = names[0].ToString();
-
-            Excel.Application xlApp;
-            Excel.Workbook wb;
-            Excel.Worksheet sheet;
-            Excel.Range range;
-            object misValue = System.Reflection.Missing.Value;
-            xlApp = new Excel.Application();
-            wb = xlApp.Workbooks.Open(Katalog, 0, true, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
-            sheet = (Excel.Worksheet)wb.Worksheets.get_Item(1);
-            int lastRow = sheet.Cells.SpecialCells(Excel.XlCellType.xlCellTypeLastCell).Row;
-            range = sheet.Range["B6", "C" + lastRow.ToString()];
-            int rowCount = range.Rows.Count;
-            int colCount = range.Columns.Count;
-            for (int i = 1; i <= rowCount; i++)
+            DirectoryInfo info = new DirectoryInfo(pathname);
+            try
             {
-                katList.Add(new KAT
-                {
-                    KMZ = range.Cells[i, 1].Value2.Substring(0, 10).ToString(),
-                    Text = range.Cells[i, 1].Value2.Remove(0, 15).ToString(),
-                    Count = range.Cells[i, 2].Value2.ToString()
-                });
+                FileInfo[] files = info.GetFiles(setting.ExcelSearch).OrderBy(p => p.CreationTime).ToArray();
+                Katalog = files.Last().FullName.ToString(); // names[0].ToString();
             }
-            wb.Close(true, misValue, misValue);
-            xlApp.Quit();
+            catch(IOException ioEx)
+            {
+                MessageBox.Show("NASTAL PROBLÉM PŘI HLEDÁNÍ KATALOGU\r\n\r\n"+
+                    ioEx.Message+"\r\n\r\n"+
+                    "ZKONTROLUJ ZDA JE OBSAŽEN excel SOUBOR VE SLOŽCE import", "PROBLÉM KATALOGU", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            Form4 form = new Form4();
+            form.Show();
+            try
+            {
+                Excel.Application xlApp;
+                Excel.Workbook wb;
+                Excel.Worksheet sheet;
+                Excel.Range range;
+                object misValue = System.Reflection.Missing.Value;
+                xlApp = new Excel.Application();
+                wb = xlApp.Workbooks.Open(Katalog, 0, true, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
+                sheet = (Excel.Worksheet)wb.Worksheets.get_Item(1);
+                int lastRow = sheet.Cells.SpecialCells(Excel.XlCellType.xlCellTypeLastCell).Row;
+                range = sheet.Range["B6", "C" + lastRow.ToString()];
+                int rowCount = range.Rows.Count;
+                int colCount = range.Columns.Count;
+                for (int i = 1; i <= rowCount; i++)
+                {
+                    katList.Add(new KAT
+                    {
+                        KMZ = range.Cells[i, 1].Value2.Substring(0, 10).ToString(),
+                        Text = range.Cells[i, 1].Value2.Remove(0, 15).ToString(),
+                        Count = range.Cells[i, 2].Value2.ToString()
+                    });
+                }
+                wb.Close(true, misValue, misValue);
+                xlApp.Quit();
+            }
+            catch(IOException ioEx)
+            {
+                MessageBox.Show("NASTAL PROBLÉM PŘI NAČÍTÁNÍ Z KATALOGU\r\n\r\n" +
+                    ioEx.Message + "\r\n\r\n" +
+                    "ZKONTROLUJ ZDA JE excel SOUBOR V ŘÁDNÉM FORMÁTU", "PROBLÉM KATALOGU", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
             form.Close();
         }
 
@@ -380,7 +599,13 @@ namespace Inv3
             else
             {
                 //DataGridViewRow nRow = new DataGridViewRow();
-                int newIndexRow = dataGridView1.Rows.Add();
+                int newIndexRow = 0;
+
+                dataGridView1.Invoke((MethodInvoker)delegate {
+                    newIndexRow = dataGridView1.Rows.Add();
+                });
+
+                //int newIndexRow = dataGridView1.Rows.Add();
                 dataGridView1.Rows[newIndexRow].Cells[0].Value = item.KMZ;
                 dataGridView1.Rows[newIndexRow].Cells[1].Value = item.PartNumber;
                 dataGridView1.Rows[newIndexRow].Cells[2].Value = item.Name;
@@ -402,9 +627,30 @@ namespace Inv3
         // Vlozi dil do seznamu v aktualne vybrane pozici
         public Boolean AddPart(PART item, int minusplusCount)
         {
+            if (item.KMZ == null)
+                item.KMZ = "";
+            if (item.PartNumber == null)
+                item.PartNumber = "";
+            if (item.Name == null)
+                item.Name = "";
+            if (item.Count == null)
+                item.Count = "";
+            if (item.OficialCount == null)
+                item.OficialCount = "";
+            if (item.TreeFullPath == null)
+                item.TreeFullPath = "";
+            if (item.ParentTag == null)
+                item.ParentTag = "";
+
             Boolean isTypeKMZ = false;
             Boolean isTypePartNumber = false;
-            String treeSelectPath = treeView1.SelectedNode.FullPath;
+            String treeSelectPath = @"";
+
+            treeView1.Invoke((MethodInvoker)delegate {
+                treeSelectPath = treeView1.SelectedNode.FullPath;
+            });
+
+            //String treeSelectPath = treeView1.SelectedNode.FullPath.ToString();
 
             // Zjistim, jestli bylo zadane i KMZ
             if (item.KMZ.Length > 0)
@@ -657,6 +903,8 @@ namespace Inv3
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             SaveTree(treeView1);
+            SavePart();
+            SaveSetting();
         }
 
         private void dataGridView1_DoubleClick(object sender, EventArgs e)
@@ -689,7 +937,7 @@ namespace Inv3
             else
             {
                 button5.Enabled = false;
-                button5.Enabled = false;
+                button6.Enabled = false;
             }
         }
 
@@ -834,5 +1082,6 @@ namespace Inv3
                 }
             }
         }
+
     }
 }

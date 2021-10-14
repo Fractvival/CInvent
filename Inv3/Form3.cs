@@ -11,9 +11,18 @@ namespace Inv3
 {
     public partial class Form3 : Form
     {
+        Boolean isEditMode = false;
+
         public Form3()
         {
             InitializeComponent();
+        }
+
+
+        public Boolean isEdit
+        {
+            get { return isEditMode; }
+            set { isEditMode = value; }
         }
 
         public string partNumber
@@ -55,6 +64,17 @@ namespace Inv3
             {
                 button1.DialogResult = DialogResult.OK;
                 this.DialogResult = DialogResult.OK;
+            }
+        }
+
+        private void Form3_Shown(object sender, EventArgs e)
+        {
+            if (isEditMode)
+            {
+                textBox1.Enabled = false;
+                textBox3.Enabled = false;
+                button1.Text = @"ULOŽIT";
+                textBox2.Focus();
             }
         }
     }

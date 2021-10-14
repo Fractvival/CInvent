@@ -73,11 +73,11 @@ namespace Inv3
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label1.Location = new System.Drawing.Point(117, 16);
+            this.label1.Location = new System.Drawing.Point(85, 16);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(153, 19);
+            this.label1.Size = new System.Drawing.Size(216, 19);
             this.label1.TabIndex = 2;
-            this.label1.Text = "ZADEJ NOVÝ NÁZEV";
+            this.label1.Text = "ZADEJ NOVÝ NÁZEV POZICE";
             // 
             // Form2
             // 
@@ -89,9 +89,8 @@ namespace Inv3
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Form2";
-            this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "NOVÝ NÁZEV";
+            this.Text = "NOVÝ NÁZEV POZICE";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

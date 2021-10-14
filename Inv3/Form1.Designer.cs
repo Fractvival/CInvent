@@ -70,9 +70,10 @@ namespace Inv3
             this.COM14 = new System.Windows.Forms.ToolStripMenuItem();
             this.COM15 = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.button6 = new System.Windows.Forms.Button();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.button6 = new System.Windows.Forms.Button();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -198,7 +199,7 @@ namespace Inv3
             this.dataGridView1.Size = new System.Drawing.Size(543, 256);
             this.dataGridView1.TabIndex = 5;
             this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
-            this.dataGridView1.DoubleClick += new System.EventHandler(this.dataGridView1_DoubleClick);
+            this.dataGridView1.DoubleClick += new System.EventHandler(this.button6_Click);
             // 
             // KMZ
             // 
@@ -338,98 +339,98 @@ namespace Inv3
             this.COM14,
             this.COM15});
             this.MenuSettingPort.Name = "MenuSettingPort";
-            this.MenuSettingPort.Size = new System.Drawing.Size(180, 22);
+            this.MenuSettingPort.Size = new System.Drawing.Size(156, 22);
             this.MenuSettingPort.Text = "PORT SKENERU";
             this.MenuSettingPort.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.MenuSettingPort_DropDownItemClicked);
             // 
             // COM1
             // 
             this.COM1.Name = "COM1";
-            this.COM1.Size = new System.Drawing.Size(180, 22);
+            this.COM1.Size = new System.Drawing.Size(114, 22);
             this.COM1.Text = "COM1";
             // 
             // COM2
             // 
             this.COM2.Name = "COM2";
-            this.COM2.Size = new System.Drawing.Size(180, 22);
+            this.COM2.Size = new System.Drawing.Size(114, 22);
             this.COM2.Text = "COM2";
             // 
             // COM3
             // 
             this.COM3.Name = "COM3";
-            this.COM3.Size = new System.Drawing.Size(180, 22);
+            this.COM3.Size = new System.Drawing.Size(114, 22);
             this.COM3.Text = "COM3";
             // 
             // COM4
             // 
             this.COM4.Name = "COM4";
-            this.COM4.Size = new System.Drawing.Size(180, 22);
+            this.COM4.Size = new System.Drawing.Size(114, 22);
             this.COM4.Text = "COM4";
             // 
             // COM5
             // 
             this.COM5.Name = "COM5";
-            this.COM5.Size = new System.Drawing.Size(180, 22);
+            this.COM5.Size = new System.Drawing.Size(114, 22);
             this.COM5.Text = "COM5";
             // 
             // COM6
             // 
             this.COM6.Name = "COM6";
-            this.COM6.Size = new System.Drawing.Size(180, 22);
+            this.COM6.Size = new System.Drawing.Size(114, 22);
             this.COM6.Text = "COM6";
             // 
             // COM7
             // 
             this.COM7.Name = "COM7";
-            this.COM7.Size = new System.Drawing.Size(180, 22);
+            this.COM7.Size = new System.Drawing.Size(114, 22);
             this.COM7.Text = "COM7";
             // 
             // COM8
             // 
             this.COM8.Name = "COM8";
-            this.COM8.Size = new System.Drawing.Size(180, 22);
+            this.COM8.Size = new System.Drawing.Size(114, 22);
             this.COM8.Text = "COM8";
             // 
             // COM9
             // 
             this.COM9.Name = "COM9";
-            this.COM9.Size = new System.Drawing.Size(180, 22);
+            this.COM9.Size = new System.Drawing.Size(114, 22);
             this.COM9.Text = "COM9";
             // 
             // COM10
             // 
             this.COM10.Name = "COM10";
-            this.COM10.Size = new System.Drawing.Size(180, 22);
+            this.COM10.Size = new System.Drawing.Size(114, 22);
             this.COM10.Text = "COM10";
             // 
             // COM11
             // 
             this.COM11.Name = "COM11";
-            this.COM11.Size = new System.Drawing.Size(180, 22);
+            this.COM11.Size = new System.Drawing.Size(114, 22);
             this.COM11.Text = "COM11";
             // 
             // COM12
             // 
             this.COM12.Name = "COM12";
-            this.COM12.Size = new System.Drawing.Size(180, 22);
+            this.COM12.Size = new System.Drawing.Size(114, 22);
             this.COM12.Text = "COM12";
             // 
             // COM13
             // 
             this.COM13.Name = "COM13";
-            this.COM13.Size = new System.Drawing.Size(180, 22);
+            this.COM13.Size = new System.Drawing.Size(114, 22);
             this.COM13.Text = "COM13";
             // 
             // COM14
             // 
             this.COM14.Name = "COM14";
-            this.COM14.Size = new System.Drawing.Size(180, 22);
+            this.COM14.Size = new System.Drawing.Size(114, 22);
             this.COM14.Text = "COM14";
             // 
             // COM15
             // 
             this.COM15.Name = "COM15";
-            this.COM15.Size = new System.Drawing.Size(180, 22);
+            this.COM15.Size = new System.Drawing.Size(114, 22);
             this.COM15.Text = "COM15";
             // 
             // statusStrip1
@@ -442,6 +443,18 @@ namespace Inv3
             this.statusStrip1.Size = new System.Drawing.Size(940, 22);
             this.statusStrip1.TabIndex = 11;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 17);
+            // 
+            // toolStripStatusLabel2
+            // 
+            this.toolStripStatusLabel2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(0, 17);
             // 
             // button6
             // 
@@ -456,17 +469,12 @@ namespace Inv3
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
-            // toolStripStatusLabel1
+            // saveFileDialog1
             // 
-            this.toolStripStatusLabel1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 17);
-            // 
-            // toolStripStatusLabel2
-            // 
-            this.toolStripStatusLabel2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(0, 17);
+            this.saveFileDialog1.DefaultExt = "xlsx";
+            this.saveFileDialog1.FileName = "Export";
+            this.saveFileDialog1.Filter = "Excel soubory|*.xlsx|Všechny soubory|*.*";
+            this.saveFileDialog1.Title = "ZVOLIT SOUBOR PRO EXPORT DAT";
             // 
             // Form1
             // 
@@ -488,7 +496,7 @@ namespace Inv3
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "CInvent";
+            this.Text = "EasySklad";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox1.ResumeLayout(false);
@@ -549,6 +557,7 @@ namespace Inv3
         public System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         public System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         public System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }
 

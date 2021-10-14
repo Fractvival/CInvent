@@ -79,7 +79,7 @@ namespace Inv3
             ComName = "COM2",
             ExcelSearch = "*.xlsx",
             ImportFolder = "import",
-            AutoRePath = "false",
+            AutoRePath = "true",
             AutoAddInfo = "true"
         };
         // Toto je pomocna promenna s plnou cestou a nazvem souboru ofiko skladu (doplneno dale takze nemenit)
@@ -98,20 +98,33 @@ namespace Inv3
                 StreamWriter writer = new StreamWriter(filename);
                 for ( int i = 0; i < partList.Count; i++ )
                 {
-                    writer.WriteLine(partList[i].KMZ);
-                    writer.WriteLine(partList[i].PartNumber);
-                    writer.WriteLine(partList[i].Name);
-                    writer.WriteLine(partList[i].Count);
-                    writer.WriteLine(partList[i].OficialCount);
-                    writer.WriteLine(partList[i].TreeFullPath);
-                    writer.WriteLine(partList[i].ParentTag);
+                    if ( partList[i].ParentTag == null )
+                    {
+                        writer.WriteLine(partList[i].KMZ);
+                        writer.WriteLine(partList[i].PartNumber);
+                        writer.WriteLine(partList[i].Name);
+                        writer.WriteLine(partList[i].Count);
+                        writer.WriteLine(partList[i].OficialCount);
+                        writer.WriteLine(partList[i].TreeFullPath);
+                        writer.WriteLine(partList[i].ParentTag);
+                    }
+                    else if (!partList[i].ParentTag.Equals("---DELETE"))
+                    {
+                        writer.WriteLine(partList[i].KMZ);
+                        writer.WriteLine(partList[i].PartNumber);
+                        writer.WriteLine(partList[i].Name);
+                        writer.WriteLine(partList[i].Count);
+                        writer.WriteLine(partList[i].OficialCount);
+                        writer.WriteLine(partList[i].TreeFullPath);
+                        writer.WriteLine(partList[i].ParentTag);
+                    }
                 }
                 writer.Close();
             }
-            catch(IOException ioEx)
+            catch
             {
                 MessageBox.Show("NASTALY PROBLÉMY PŘI UKLÁDÁNÍ SEZNAMU DÍLŮ !!\r\n\r\n" +
-                    ioEx.Message + "\r\n\r\n" +
+                    //ioEx.Message + "\r\n\r\n" +
                     "ZKONTROLUJ ZDA SE exe soubor PROGRAMU NACHÁZÍ\r\n" +
                     "NA MÍSTĚ S POVOLENÝM ZÁPISEM NA DISK", "PROBLÉM V UKLÁDÁNÍ SEZNAMU DÍLŮ", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -160,10 +173,10 @@ namespace Inv3
                     bf.Serialize(file, tree.Nodes.Cast<TreeNode>().ToList());
                 }
             }
-            catch(IOException ioEx)
+            catch
             {
                 MessageBox.Show("NASTALY PROBLÉMY PŘI UKLÁDÁNÍ SEZNAMU POZIC\r\n\r\n" +
-                    ioEx.Message + "\r\n\r\n" +
+                    //ioEx.Message + "\r\n\r\n" +
                     "ZKONTROLUJ ZDA SE exe soubor PROGRAMU NACHÁZÍ\r\n" +
                     "NA MÍSTĚ S POVOLENÝM ZÁPISEM NA DISK", "PROBLÉM V UKLÁDÁNÍ NASTAVENÍ", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -208,10 +221,10 @@ namespace Inv3
                 writer.WriteLine(setting.AutoAddInfo);
                 writer.Close();
             }
-            catch (IOException ioEx)
+            catch
             {
                 MessageBox.Show("NASTALY PROBLÉMY PŘI UKLÁDÁNÍ NASTAVENÍ PROGRAMU\r\n\r\n" +
-                    ioEx.Message + "\r\n\r\n" +
+                    //ioEx.Message + "\r\n\r\n" +
                     "ZKONTROLUJ ZDA SE exe soubor PROGRAMU NACHÁZÍ\r\n" +
                     "NA MÍSTĚ S POVOLENÝM ZÁPISEM NA DISK", "PROBLÉM V UKLÁDÁNÍ NASTAVENÍ", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -231,10 +244,10 @@ namespace Inv3
                 setting.AutoAddInfo = reader.ReadLine();
                 reader.Close();
             }
-            catch (IOException ioEx)
+            catch
             {
                 MessageBox.Show("NASTALY PROBLÉMY PŘI NAČÍTÁNÍ NASTAVENÍ PROGRAMU\r\n\r\n" +
-                    ioEx.Message + "\r\n\r\n" +
+                    //ioEx.Message + "\r\n\r\n" +
                     "ZKONTROLUJ ZDA SE exe soubor PROGRAMU NACHÁZÍ\r\n" +
                     "NA MÍSTĚ S POVOLENÝM ZÁPISEM NA DISK", "PROBLÉM V NAČÍTÁNÍ NASTAVENÍ", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -251,7 +264,7 @@ namespace Inv3
                 serialPort1.Open();
                 //serialPort1.Close();
             }
-            catch(IOException io)
+            catch
             {
                 isErr = true;
             }
@@ -284,7 +297,7 @@ namespace Inv3
                     serialPort1.Open();
                     serialPort1.Close();
                 }
-                catch(IOException ioEx)
+                catch
                 {
                     isErr = true;
                 }
@@ -299,12 +312,12 @@ namespace Inv3
                 serialPort1.PortName = setting.ComName;
                 serialPort1.Open();
             }
-            catch (IOException ioEx)
+            catch
             {
                 isErr = true;
                 toolStripStatusLabel1.Text = ">> CHYBA PORTU !" + serialPort1.PortName;
                 MessageBox.Show("NELZE OTEVŘÍT COM PORT SKENERU\r\n\r\n" +
-                    ioEx.Message + "\r\n\r\n" +
+                    //ioEx.Message + "\r\n\r\n" +
                     "V NASTAVENÍ PROGRAMU ZVOL Z DOSTUPNÝCH COM PORTŮ\r\n" +
                     "", "PROBLÉM COM PORTU SKENERU", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -320,7 +333,6 @@ namespace Inv3
             LoadSetting();
             InitPort();
             LoadPart();
-
 
             treeView1.BeginUpdate();
             LoadTree(treeView1);
@@ -356,10 +368,10 @@ namespace Inv3
                 FileInfo[] files = info.GetFiles(setting.ExcelSearch).OrderBy(p => p.CreationTime).ToArray();
                 Katalog = files.Last().FullName.ToString(); // names[0].ToString();
             }
-            catch(IOException ioEx)
+            catch
             {
                 MessageBox.Show("NASTAL PROBLÉM PŘI HLEDÁNÍ KATALOGU\r\n\r\n"+
-                    ioEx.Message+"\r\n\r\n"+
+                    //ioEx.Message+"\r\n\r\n"+
                     "ZKONTROLUJ ZDA JE OBSAŽEN excel SOUBOR VE SLOŽCE import", "PROBLÉM KATALOGU", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             Form4 form = new Form4();
@@ -372,7 +384,7 @@ namespace Inv3
                 Excel.Range range;
                 object misValue = System.Reflection.Missing.Value;
                 xlApp = new Excel.Application();
-                wb = xlApp.Workbooks.Open(Katalog, 0, true, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
+                wb = xlApp.Workbooks.Open(Katalog, 0, true, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, false, 1, 0);
                 sheet = (Excel.Worksheet)wb.Worksheets.get_Item(1);
                 int lastRow = sheet.Cells.SpecialCells(Excel.XlCellType.xlCellTypeLastCell).Row;
                 range = sheet.Range["B6", "C" + lastRow.ToString()];
@@ -390,10 +402,10 @@ namespace Inv3
                 wb.Close(true, misValue, misValue);
                 xlApp.Quit();
             }
-            catch(IOException ioEx)
+            catch
             {
                 MessageBox.Show("NASTAL PROBLÉM PŘI NAČÍTÁNÍ Z KATALOGU\r\n\r\n" +
-                    ioEx.Message + "\r\n\r\n" +
+                    //ioEx.Message + "\r\n\r\n" +
                     "ZKONTROLUJ ZDA JE excel SOUBOR V ŘÁDNÉM FORMÁTU", "PROBLÉM KATALOGU", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             form.Close();
@@ -423,8 +435,31 @@ namespace Inv3
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("POZICE:>   ''" + treeView1.SelectedNode.Text + "''\r\n\r\nURČITĚ CHCEŠ  N E N Á V R A T N Ě  SMAZAT TUTO POZICI ?", "S M A Z Á N Í  POZICE!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            if (MessageBox.Show("POZICE:>   ''" + treeView1.SelectedNode.FullPath + "''\r\n\r\nURČITĚ CHCEŠ  N E N Á V R A T N Ě  SMAZAT TUTO POZICI ?", "S M A Z Á N Í  POZICE!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
+                if (partList.Count > 0)
+                {
+                    for (int i = 0; i < partList.Count; i++)
+                    {
+                        PART delPart = new PART(
+                            partList[i].KMZ,
+                            partList[i].PartNumber,
+                            partList[i].Name,
+                            partList[i].Count,
+                            partList[i].OficialCount,
+                            partList[i].ParentTag,
+                            partList[i].TreeFullPath);
+                        if ( partList[i].TreeFullPath.Contains(treeView1.SelectedNode.FullPath) )
+                        {
+                            partList.RemoveAt(i);
+                            delPart.ParentTag = "---DELETE";
+                            partList.Insert(i,delPart);
+                        }
+                    }
+                    SavePart();
+                    partList.Clear();
+                    LoadPart();
+                }
                 treeView1.SelectedNode.Remove();
             }
             treeView1.Focus();
@@ -479,16 +514,19 @@ namespace Inv3
         // Pokud existuje, vrati jeho index v seznamu, jinak -1
         public int IsKMZinPartList(String KMZ)
         {
-            for (int i = 0; i < partList.Count; i++)
+            if (partList.Count > 0)
             {
-                try
+                for (int i = 0; i < partList.Count; i++)
                 {
-                    if (partList[i].KMZ.Equals(KMZ))
-                        return i;
-                }
-                catch
-                {
-                    return -1;
+                    try
+                    {
+                        if (partList[i].KMZ.Equals(KMZ))
+                            return i;
+                    }
+                    catch
+                    {
+                        return -1;
+                    }
                 }
             }
             return -1;
@@ -498,16 +536,19 @@ namespace Inv3
         // Pokud existuje, vrati jeho index v seznamu, jinak -1
         public int IsPartNumberinPartList(String PartNumber)
         {
-            for (int i = 0; i < partList.Count; i++)
+            if (partList.Count > 0)
             {
-                try
+                for (int i = 0; i < partList.Count; i++)
                 {
-                    if (partList[i].PartNumber.Equals(PartNumber))
-                        return i;
-                }
-                catch
-                {
-                    return -1;
+                    try
+                    {
+                        if (partList[i].PartNumber.Equals(PartNumber))
+                            return i;
+                    }
+                    catch
+                    {
+                        return -1;
+                    }
                 }
             }
             return -1;
@@ -515,16 +556,19 @@ namespace Inv3
 
         public int IsKMZinKatalogList(String KMZ)
         {
-            for (int i = 0; i < katList.Count; i++)
+            if (katList.Count > 0)
             {
-                try
+                for (int i = 0; i < katList.Count; i++)
                 {
-                    if (katList[i].KMZ.Equals(KMZ))
-                        return i;
-                }
-                catch
-                {
-                    return -1;
+                    try
+                    {
+                        if (katList[i].KMZ.Equals(KMZ))
+                            return i;
+                    }
+                    catch
+                    {
+                        return -1;
+                    }
                 }
             }
             return -1;
@@ -532,16 +576,19 @@ namespace Inv3
 
         public int IsPartNumberinKatalogList(String PartNumber)
         {
-            for (int i = 0; i < katList.Count; i++)
+            if (katList.Count > 0)
             {
-                try
+                for (int i = 0; i < katList.Count; i++)
                 {
-                    if (katList[i].Text.Contains(PartNumber))
-                        return i;
-                }
-                catch
-                {
-                    return -1;
+                    try
+                    {
+                        if (katList[i].Text.Contains(PartNumber))
+                            return i;
+                    }
+                    catch
+                    {
+                        return -1;
+                    }
                 }
             }
             return -1;
@@ -881,8 +928,67 @@ namespace Inv3
             }
         }
 
+
+
+        //EXPORT
         private void button3_Click(object sender, EventArgs e)
         {
+            String pathname = System.Windows.Forms.Application.StartupPath.ToString();
+            saveFileDialog1.InitialDirectory = pathname;
+            saveFileDialog1.Title = @"ZVOL SOUBOR PRO EXPORT";
+            DialogResult result =  saveFileDialog1.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                //MessageBox.Show(saveFileDialog1.FileName);
+                String nodePath = treeView1.SelectedNode.FullPath.ToString();
+                String nodeText = treeView1.SelectedNode.Text.ToString();
+                if (partList.Count > 0)
+                {
+                    pathname = saveFileDialog1.FileName;
+                    if (File.Exists(pathname))
+                        File.Delete(pathname);
+                    var workBooks = excel.Workbooks;
+                    var workBook = workBooks.Add();
+                    var workSheet = (Excel.Worksheet)excel.ActiveSheet;
+                    workSheet.Name = nodeText.ToString();
+
+                    workSheet.Range["A:A"].ColumnWidth = 15;
+                    workSheet.Cells[1,1] = "KZM";
+                    workSheet.Range["B:B"].ColumnWidth = 30;
+                    workSheet.Cells[1,2] = "PARTNUMBER";
+                    workSheet.Range["C:C"].ColumnWidth = 50;
+                    workSheet.Cells[1,3] = "NÁZEV";
+                    workSheet.Range["D:D"].ColumnWidth = 10;
+                    workSheet.Cells[1,4] = "POČET";
+                    workSheet.Range["E:E"].ColumnWidth = 10;
+                    workSheet.Cells[1,5] = "KAT.POČET";
+                    workSheet.Range["F:F"].ColumnWidth = 20;
+                    workSheet.Cells[1,6] = "POZICE";
+                    workSheet.Range["A1:H1"].Interior.ColorIndex = 39;
+                    workSheet.Range["A1:H1"].RowHeight = 20;
+                    workSheet.Range["A1:H30000"].NumberFormat = "@";
+                    workSheet.Range["A1:H30000"].HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                    workSheet.Range["A1:H30000"].VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
+
+                    workSheet.Range["A1:H1"].RowHeight = 20;
+
+                    for (int i = 0; i < partList.Count; i++)
+                    {
+                        if (partList[i].TreeFullPath.Contains(nodePath))
+                        {
+                            workSheet.Cells[i + 2, "A"] = partList[i].KMZ;
+                            workSheet.Cells[i + 2, "B"] = partList[i].PartNumber;
+                            workSheet.Cells[i + 2, "C"] = partList[i].Name;
+                            workSheet.Cells[i + 2, "D"] = partList[i].Count;
+                            workSheet.Cells[i + 2, "E"] = partList[i].OficialCount;
+                            workSheet.Cells[i + 2, "F"] = partList[i].TreeFullPath;
+                        }
+                    }
+
+                    workBook.SaveAs(pathname, Excel.XlFileFormat.xlOpenXMLWorkbook,ReadOnlyRecommended:false);
+                    workBooks.Close();
+                }
+            }
         }
 
         private void serialPort1_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
@@ -907,18 +1013,6 @@ namespace Inv3
             SaveSetting();
         }
 
-        private void dataGridView1_DoubleClick(object sender, EventArgs e)
-        {
-            if (dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].IsNewRow)
-            {
-                MessageBox.Show("NEMA DATA");
-            }
-            else
-            {
-                MessageBox.Show("MA DATA");
-            }
-        }
-
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
             if (dataGridView1.SelectedRows.Count != 0)
@@ -939,11 +1033,6 @@ namespace Inv3
                 button5.Enabled = false;
                 button6.Enabled = false;
             }
-        }
-
-        private void xLSToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -1064,13 +1153,14 @@ namespace Inv3
                         form.partName = partList[indexPart].Name.ToString();
                         form.partNumber = partList[indexPart].PartNumber.ToString();
                         form.KMZ = partList[indexPart].KMZ.ToString();
+                        form.isEdit = true;
                         DialogResult result = form.ShowDialog();
                         if (result == DialogResult.OK)
                         {
                             PART saveItem = new PART();
                             saveItem = partList[indexPart];
-                            saveItem.KMZ = form.KMZ;
-                            saveItem.PartNumber = form.partNumber;
+                            //saveItem.KMZ = form.KMZ;
+                            //saveItem.PartNumber = form.partNumber;
                             saveItem.Name = form.partName;
                             saveItem.Count = form.partCount.ToString();
                             this.dataGridView1.Rows.Remove(this.dataGridView1.SelectedRows[0]);

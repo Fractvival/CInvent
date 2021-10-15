@@ -1,6 +1,7 @@
 SKLAD
 import
 *.xlsx
-COM6
+COM2
+true
 true
 true

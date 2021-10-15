@@ -37,6 +37,7 @@ namespace Inv3
             // z ofiko skladu
             // true = ano, false = bude se zobrazovat potvrzovaci dialog
             public String AutoAddInfo;
+            public String ShowLines;
         }
 
         public struct PART
@@ -80,7 +81,8 @@ namespace Inv3
             ExcelSearch = "*.xlsx",
             ImportFolder = "import",
             AutoRePath = "true",
-            AutoAddInfo = "true"
+            AutoAddInfo = "true",
+            ShowLines = "true"
         };
         // Toto je pomocna promenna s plnou cestou a nazvem souboru ofiko skladu (doplneno dale takze nemenit)
         String Katalog = "";
@@ -193,13 +195,12 @@ namespace Inv3
                     {
                         BinaryFormatter bf = new BinaryFormatter();
                         object obj = bf.Deserialize(file);
-
                         TreeNode[] nodeList = (obj as IEnumerable<TreeNode>).ToArray();
                         tree.Nodes.AddRange(nodeList);
                     }
                 }
             }
-            catch(IOException ioEx)
+            catch
             {
 
             }
@@ -219,6 +220,7 @@ namespace Inv3
                 writer.WriteLine(setting.ComName);
                 writer.WriteLine(setting.AutoRePath);
                 writer.WriteLine(setting.AutoAddInfo);
+                writer.WriteLine(setting.ShowLines);
                 writer.Close();
             }
             catch
@@ -242,6 +244,7 @@ namespace Inv3
                 setting.ComName = reader.ReadLine();
                 setting.AutoRePath = reader.ReadLine();
                 setting.AutoAddInfo = reader.ReadLine();
+                setting.ShowLines = reader.ReadLine();
                 reader.Close();
             }
             catch
@@ -325,6 +328,65 @@ namespace Inv3
                 toolStripStatusLabel1.Text = ">> SKENER NA " + serialPort1.PortName;
         }
 
+        public int SynchroOficialCount()
+        {
+            int returnCount = 0;
+            // vzato vcelku jednoduse
+            // pokud je v katalogu aspon jedna polozka a pokud je v seznamu dilu aspon jeden dil..
+            if ( (partList.Count > 0) && (katList.Count > 0) )
+            {
+                // ..zacneme porovnat kazdou polozku katalogu..
+                for ( int i = 0; i < katList.Count; i++ )
+                {
+                    // jeste osetrime aby bylo zaruceno ze v KZM neco je
+                    if ( (katList[i].KMZ != null) || (katList[i].KMZ != "") )
+                    {
+                        // totez osetrime i v poctech
+                        if ( (katList[i].Count != null) || (katList[i].Count != "") )
+                        {
+                            // ..zacne porovnat aktualni polozku katalogu se vsemi polozkami dilu
+                            for ( int p = 0; p < partList.Count; p++ )
+                            {
+                                // osetrujeme kzm v dile
+                                if ( (partList[p].KMZ != null) || (partList[p].KMZ != "") )
+                                {
+                                    // osetrujeme pocty v dile
+                                    if ( (partList[p].OficialCount != null) || (partList[p].OficialCount != "") )
+                                    {
+                                        // jestlize KZM polozky katalogu sedi s KZM dilu
+                                        if ( katList[i].KMZ.Equals(partList[p].KMZ) )
+                                        {
+                                            // a jestlize jejich pocty nejsou shodne
+                                            if ( !katList[i].Count.Equals(partList[p].OficialCount) )
+                                            {
+                                                // ulozime info o aktualnim dile
+                                                PART item = partList[p];
+                                                // NASTAVIME do nej novou hodnotu z katalogu
+                                                item.OficialCount = katList[i].Count;
+                                                // smazeme jej ze seznamu dilu (nelze pristupovat primo)
+                                                partList.RemoveAt(p);
+                                                // a znovu jej vlozime na stejne misto s upravenou hodnotou
+                                                partList.Insert(p, item);
+                                                // zvysime pocet upravenych polozek o 1
+                                                returnCount++;
+                                            }
+                                            // protoze KZM souhlasi, netreba dal prohledavat a muzeme jet k dalsi polozce
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                // protoze byla splnena podminka na obsazeni (pocty > 0) seznamu katList i partList, da se
+                // ocekavat nejaka zmena, a proto prave zde vratime pocet modifikovanych polozek
+                return returnCount;
+            }
+            // protoze nebyla splnena prvni podminka tak nebylo co porovnavat a tudiz vratime -1
+            return -1;
+        }
+
 
         public Form1()
         {
@@ -345,6 +407,15 @@ namespace Inv3
             }
             treeView1.EndUpdate();
             treeView1.ExpandAll();
+
+            if ( setting.ShowLines.ToUpper().ToString().Equals("TRUE") )
+            {
+                this.checkBox1.Checked = true;
+            }
+            else
+            {
+                this.checkBox1.Checked = false;
+            }
 
             String pathname = System.Windows.Forms.Application.StartupPath.ToString();
             if (!Directory.Exists(pathname + @"\\" + setting.ImportFolder))
@@ -406,16 +477,26 @@ namespace Inv3
             {
                 MessageBox.Show("NASTAL PROBLÉM PŘI NAČÍTÁNÍ Z KATALOGU\r\n\r\n" +
                     //ioEx.Message + "\r\n\r\n" +
-                    "ZKONTROLUJ ZDA JE excel SOUBOR V ŘÁDNÉM FORMÁTU", "PROBLÉM KATALOGU", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    "ZKONTROLUJ ZDA JE excel SOUBOR PŘITOMEN A V ŘÁDNÉM FORMÁTU", "PROBLÉM KATALOGU", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             form.Close();
+            int iReturn = SynchroOficialCount();
+            if ( iReturn > 0 )
+            {
+                if ( MessageBox.Show("BYLY NALEZENY ZMĚNY KATALOGOVÝCH POČTŮ\r\n\r\n"+
+                    "POČET ZMĚN : "+iReturn.ToString()+
+                    "\r\n\r\nULOŽIT ZMĚNY HNED ?", "ULOŽIT ZMĚNY KATALOGOVÝCH POČTŮ ?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes )
+                {
+                    SavePart();
+                }
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
         }
 
-
+        // PRIDAT TREENODE
         private void button1_Click(object sender, EventArgs e)
         {
             Form2 form = new Form2();
@@ -428,11 +509,12 @@ namespace Inv3
                 treeView1.SelectedNode.Nodes.Add(addTree);
                 treeView1.SelectedNode.Expand();
                 treeView1.SelectedNode = addTree;
-                treeView1.Focus();
                 SaveTree(treeView1);
+                treeView1.Focus();
             }
         }
 
+        //ODSTRANIT TREENODE
         private void button2_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("POZICE:>   ''" + treeView1.SelectedNode.FullPath + "''\r\n\r\nURČITĚ CHCEŠ  N E N Á V R A T N Ě  SMAZAT TUTO POZICI ?", "S M A Z Á N Í  POZICE!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
@@ -465,7 +547,7 @@ namespace Inv3
             treeView1.Focus();
         }
 
-
+        // ZMENA VYBERU NA TREE - PREKRESLENI DILU V GRIDVIEW
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
             if (treeView1.SelectedNode.Tag.ToString() == "ROOT")
@@ -926,6 +1008,7 @@ namespace Inv3
                     ParentTag = ""
                 }, form.partCount);
             }
+            treeView1.Focus();
         }
 
 
@@ -946,48 +1029,89 @@ namespace Inv3
                 {
                     pathname = saveFileDialog1.FileName;
                     if (File.Exists(pathname))
-                        File.Delete(pathname);
+                        try
+                        {
+                            File.Delete(pathname);
+                        }
+                        catch (IOException ioEx)
+                        {
+                            MessageBox.Show("NASTALY PROBLÉMY PŘI PRÁCI S EXPORTNÍM DOKUMENTEM\r\n\r\n" +
+                                ioEx.Message +
+                                "\r\n\r\nEXPORT NEBUDE PROVEDEN", "SOUBOR JE NEDOSTUPNY", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            return;
+                        }
                     var workBooks = excel.Workbooks;
                     var workBook = workBooks.Add();
                     var workSheet = (Excel.Worksheet)excel.ActiveSheet;
                     workSheet.Name = nodeText.ToString();
-
                     workSheet.Range["A:A"].ColumnWidth = 15;
-                    workSheet.Cells[1,1] = "KZM";
+                    workSheet.Cells[1, 1] = "KZM";
                     workSheet.Range["B:B"].ColumnWidth = 30;
-                    workSheet.Cells[1,2] = "PARTNUMBER";
+                    workSheet.Cells[1, 2] = "PARTNUMBER";
                     workSheet.Range["C:C"].ColumnWidth = 50;
-                    workSheet.Cells[1,3] = "NÁZEV";
+                    workSheet.Cells[1, 3] = "NÁZEV";
                     workSheet.Range["D:D"].ColumnWidth = 10;
-                    workSheet.Cells[1,4] = "POČET";
+                    workSheet.Cells[1, 4] = "POČET";
                     workSheet.Range["E:E"].ColumnWidth = 10;
-                    workSheet.Cells[1,5] = "KAT.POČET";
+                    workSheet.Cells[1, 5] = "KAT.POČET";
                     workSheet.Range["F:F"].ColumnWidth = 20;
-                    workSheet.Cells[1,6] = "POZICE";
+                    workSheet.Cells[1, 6] = "POZICE";
                     workSheet.Range["A1:H1"].Interior.ColorIndex = 39;
                     workSheet.Range["A1:H1"].RowHeight = 20;
                     workSheet.Range["A1:H30000"].NumberFormat = "@";
                     workSheet.Range["A1:H30000"].HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
                     workSheet.Range["A1:H30000"].VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
-
-                    workSheet.Range["A1:H1"].RowHeight = 20;
+                    workSheet.Range["A1:H1"].RowHeight = 25;
+                    int count = 0;
+                    int oficialCount = 0;
+                    String pos = "";
 
                     for (int i = 0; i < partList.Count; i++)
                     {
+                        if (partList[i].Count != null)
+                            count = Int32.Parse(partList[i].Count);
+                        if (partList[i].OficialCount != null)
+                            oficialCount = Int32.Parse(partList[i].OficialCount);
                         if (partList[i].TreeFullPath.Contains(nodePath))
                         {
                             workSheet.Cells[i + 2, "A"] = partList[i].KMZ;
                             workSheet.Cells[i + 2, "B"] = partList[i].PartNumber;
                             workSheet.Cells[i + 2, "C"] = partList[i].Name;
                             workSheet.Cells[i + 2, "D"] = partList[i].Count;
+                            if (count < oficialCount)
+                            {
+                                workSheet.Cells[i + 2, "D"].Interior.ColorIndex = 38;
+                            }
+                            else if (count == oficialCount)
+                            {
+                                workSheet.Cells[i + 2, "D"].Interior.ColorIndex = 35;
+                            }
+                            else if (count > oficialCount)
+                            {
+                                workSheet.Cells[i + 2, "D"].Interior.ColorIndex = 42;
+
+                            }
+                            else
+                            {
+                                workSheet.Cells[i + 2, "D"].Interior.ColorIndex = 15;
+                            }
                             workSheet.Cells[i + 2, "E"] = partList[i].OficialCount;
-                            workSheet.Cells[i + 2, "F"] = partList[i].TreeFullPath;
+                            pos = "";
+                            pos = partList[i].TreeFullPath;
+                            pos = pos.Replace(nodePath, "");
+                            pos = pos.Replace(@"\\", "");
+                            pos = pos.Replace(@"\", "");
+                            workSheet.Cells[i + 2, "F"] = pos.ToString(); //partList[i].TreeFullPath;
                         }
                     }
-
-                    workBook.SaveAs(pathname, Excel.XlFileFormat.xlOpenXMLWorkbook,ReadOnlyRecommended:false);
+                    workBook.SaveAs(pathname, Excel.XlFileFormat.xlOpenXMLWorkbook, ReadOnlyRecommended: false);
                     workBooks.Close();
+                    MessageBox.Show("EXPORT BYL ÚSPĚSNĚ DOKONČEN", "EXPORT", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
+            }
+            else
+            {
+                treeView1.Focus();
             }
         }
 
@@ -1100,6 +1224,7 @@ namespace Inv3
             }
         }
 
+        // EDITACE DILU
         private void button6_Click(object sender, EventArgs e)
         {
             if (dataGridView1.SelectedRows.Count != 0)
@@ -1149,10 +1274,38 @@ namespace Inv3
                     if (indexPart != -1)
                     {
                         Form3 form = new Form3();
-                        form.partCount = Int32.Parse(partList[indexPart].Count.ToString());
-                        form.partName = partList[indexPart].Name.ToString();
-                        form.partNumber = partList[indexPart].PartNumber.ToString();
-                        form.KMZ = partList[indexPart].KMZ.ToString();
+                        if (partList[indexPart].Count == null)
+                        {
+                            form.partCount = 1;
+                        }
+                        else
+                        {
+                            form.partCount = Int32.Parse(partList[indexPart].Count.ToString());
+                        }
+                        if (partList[indexPart].Name == null)
+                        {
+                            form.partName = "";
+                        }
+                        else
+                        {
+                            form.partName = partList[indexPart].Name.ToString();
+                        }
+                        if (partList[indexPart].PartNumber == null)
+                        {
+                            form.partNumber = "";
+                        }
+                        else
+                        {
+                            form.partNumber = partList[indexPart].PartNumber.ToString();
+                        }
+                        if (partList[indexPart].KMZ == null)
+                        {
+                            form.KMZ = "";
+                        }
+                        else
+                        {
+                            form.KMZ = partList[indexPart].KMZ.ToString();
+                        }
                         form.isEdit = true;
                         DialogResult result = form.ShowDialog();
                         if (result == DialogResult.OK)
@@ -1173,5 +1326,64 @@ namespace Inv3
             }
         }
 
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if ( checkBox1.Checked )
+            {
+                this.treeView1.ShowLines = true;
+                setting.ShowLines = "true";
+            }
+            else
+            {
+                this.treeView1.ShowLines = false;
+                setting.ShowLines = "false";
+            }
+            this.treeView1.Focus();
+        }
+
+        // POSUN POLOZKU V TREE NAHORU
+        private void button8_Click(object sender, EventArgs e)
+        {
+            int index = this.treeView1.SelectedNode.Index;
+            if ( index >= 1 )
+            {
+                TreeNode saveNode = new TreeNode();
+                saveNode = this.treeView1.SelectedNode;
+                this.treeView1.Nodes.Remove(this.treeView1.SelectedNode);
+                this.treeView1.SelectedNode.Parent.Nodes.Insert((index - 1), saveNode);
+                this.treeView1.SelectedNode = saveNode;
+            }
+            else
+            {
+                Console.Beep(333, 70);
+            }
+            this.treeView1.Focus();
+        }
+
+        // POSUN POLOZKU V TREE DOLU
+        private void button7_Click(object sender, EventArgs e)
+        {
+            int index = this.treeView1.SelectedNode.Index;
+            if (index < this.treeView1.SelectedNode.Parent.GetNodeCount(false))
+            {
+                TreeNode saveNode = new TreeNode();
+                saveNode = this.treeView1.SelectedNode;
+                this.treeView1.Nodes.Remove(this.treeView1.SelectedNode);
+                this.treeView1.SelectedNode.Parent.Nodes.Insert((index + 1), saveNode);
+                this.treeView1.SelectedNode = saveNode;
+            }
+            else
+            {
+                Console.Beep(333, 70);
+            }
+            this.treeView1.Focus();
+        }
+
+        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        {
+            Point pt = new Point();
+            pt = treeView1.PointToClient(MousePosition);
+            this.treeView1.SelectedNode = treeView1.GetNodeAt(pt);
+        }
     }
 }

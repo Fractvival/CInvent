@@ -74,23 +74,35 @@ namespace Inv3
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.button6 = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.button7 = new System.Windows.Forms.Button();
+            this.button8 = new System.Windows.Forms.Button();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.pŘIDATToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.sMAZATToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.eXPORTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // treeView1
             // 
             this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.treeView1.ContextMenuStrip = this.contextMenuStrip1;
             this.treeView1.Font = new System.Drawing.Font("Consolas", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.treeView1.FullRowSelect = true;
             this.treeView1.HotTracking = true;
             this.treeView1.Location = new System.Drawing.Point(13, 27);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(365, 420);
+            this.treeView1.ShowLines = false;
+            this.treeView1.Size = new System.Drawing.Size(365, 438);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
@@ -154,7 +166,7 @@ namespace Inv3
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button1.Font = new System.Drawing.Font("Consolas", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button1.Location = new System.Drawing.Point(13, 453);
+            this.button1.Location = new System.Drawing.Point(12, 500);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(100, 46);
             this.button1.TabIndex = 3;
@@ -166,7 +178,7 @@ namespace Inv3
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button2.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button2.Location = new System.Drawing.Point(298, 453);
+            this.button2.Location = new System.Drawing.Point(298, 500);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(80, 46);
             this.button2.TabIndex = 4;
@@ -196,7 +208,7 @@ namespace Inv3
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(543, 256);
+            this.dataGridView1.Size = new System.Drawing.Size(543, 274);
             this.dataGridView1.TabIndex = 5;
             this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
             this.dataGridView1.DoubleClick += new System.EventHandler(this.button6_Click);
@@ -241,7 +253,7 @@ namespace Inv3
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button3.Font = new System.Drawing.Font("Consolas", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button3.Location = new System.Drawing.Point(119, 453);
+            this.button3.Location = new System.Drawing.Point(119, 500);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(100, 46);
             this.button3.TabIndex = 6;
@@ -253,7 +265,7 @@ namespace Inv3
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button4.Font = new System.Drawing.Font("Consolas", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button4.Location = new System.Drawing.Point(538, 453);
+            this.button4.Location = new System.Drawing.Point(538, 500);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(120, 46);
             this.button4.TabIndex = 7;
@@ -266,7 +278,7 @@ namespace Inv3
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button5.Enabled = false;
             this.button5.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button5.Location = new System.Drawing.Point(848, 453);
+            this.button5.Location = new System.Drawing.Point(848, 500);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(80, 46);
             this.button5.TabIndex = 8;
@@ -438,7 +450,7 @@ namespace Inv3
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.toolStripStatusLabel2});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 509);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 556);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(940, 22);
             this.statusStrip1.TabIndex = 11;
@@ -461,7 +473,7 @@ namespace Inv3
             this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button6.Enabled = false;
             this.button6.Font = new System.Drawing.Font("Consolas", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button6.Location = new System.Drawing.Point(664, 453);
+            this.button6.Location = new System.Drawing.Point(664, 500);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(120, 46);
             this.button6.TabIndex = 12;
@@ -476,11 +488,94 @@ namespace Inv3
             this.saveFileDialog1.Filter = "Excel soubory|*.xlsx|Všechny soubory|*.*";
             this.saveFileDialog1.Title = "ZVOLIT SOUBOR PRO EXPORT DAT";
             // 
+            // checkBox1
+            // 
+            this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.checkBox1.Location = new System.Drawing.Point(123, 471);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(139, 22);
+            this.checkBox1.TabIndex = 13;
+            this.checkBox1.Text = "ZOBRAZIT LINKY";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
+            // button7
+            // 
+            this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button7.Font = new System.Drawing.Font("Consolas", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.button7.Location = new System.Drawing.Point(68, 471);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(49, 23);
+            this.button7.TabIndex = 14;
+            this.button7.Text = "˅";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
+            // button8
+            // 
+            this.button8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button8.Font = new System.Drawing.Font("Consolas", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.button8.Location = new System.Drawing.Point(13, 471);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(49, 23);
+            this.button8.TabIndex = 15;
+            this.button8.Text = "˄";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.pŘIDATToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.sMAZATToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.eXPORTToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 104);
+            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            // 
+            // pŘIDATToolStripMenuItem
+            // 
+            this.pŘIDATToolStripMenuItem.Name = "pŘIDATToolStripMenuItem";
+            this.pŘIDATToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            this.pŘIDATToolStripMenuItem.Text = "PŘIDAT";
+            this.pŘIDATToolStripMenuItem.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            // 
+            // sMAZATToolStripMenuItem
+            // 
+            this.sMAZATToolStripMenuItem.Name = "sMAZATToolStripMenuItem";
+            this.sMAZATToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            this.sMAZATToolStripMenuItem.Text = "SMAZAT";
+            this.sMAZATToolStripMenuItem.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+            // 
+            // eXPORTToolStripMenuItem
+            // 
+            this.eXPORTToolStripMenuItem.Name = "eXPORTToolStripMenuItem";
+            this.eXPORTToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.eXPORTToolStripMenuItem.Text = "EXPORT";
+            this.eXPORTToolStripMenuItem.Click += new System.EventHandler(this.button3_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(940, 531);
+            this.ClientSize = new System.Drawing.Size(940, 578);
+            this.Controls.Add(this.button8);
+            this.Controls.Add(this.button7);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.groupBox2);
@@ -508,6 +603,7 @@ namespace Inv3
             this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -558,6 +654,15 @@ namespace Inv3
         public System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         public System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem pŘIDATToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem sMAZATToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem eXPORTToolStripMenuItem;
     }
 }
 

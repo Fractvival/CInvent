@@ -93,6 +93,16 @@ namespace Inv3
             // 
             this.numericUpDown1.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.numericUpDown1.Location = new System.Drawing.Point(361, 52);
+            this.numericUpDown1.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Minimum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDown1.Name = "numericUpDown1";
             this.numericUpDown1.Size = new System.Drawing.Size(120, 30);
             this.numericUpDown1.TabIndex = 6;
@@ -163,7 +173,7 @@ namespace Inv3
             this.MinimizeBox = false;
             this.Name = "Form3";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "PŘIDAT NOVÝ DÍL (RUČNĚ)";
+            this.Text = "PŘIDAT NOVÝ DÍL ";
             this.Shown += new System.EventHandler(this.Form3_Shown);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

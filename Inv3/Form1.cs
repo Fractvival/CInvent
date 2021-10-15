@@ -100,7 +100,7 @@ namespace Inv3
                 StreamWriter writer = new StreamWriter(filename);
                 for ( int i = 0; i < partList.Count; i++ )
                 {
-                    if ( partList[i].ParentTag == null )
+                    if ( (partList[i].ParentTag == null) || (partList[i].ParentTag == "") )
                     {
                         writer.WriteLine(partList[i].KMZ);
                         writer.WriteLine(partList[i].PartNumber);
@@ -406,7 +406,7 @@ namespace Inv3
                 treeView1.Focus();
             }
             treeView1.EndUpdate();
-            treeView1.ExpandAll();
+            //treeView1.ExpandAll();
 
             if ( setting.ShowLines.ToUpper().ToString().Equals("TRUE") )
             {
@@ -415,6 +415,15 @@ namespace Inv3
             else
             {
                 this.checkBox1.Checked = false;
+            }
+
+            if (setting.AutoRePath.ToUpper().ToString().Equals("TRUE"))
+            {
+                this.checkBox2.Checked = false;
+            }
+            else
+            {
+                this.checkBox2.Checked = true;
             }
 
             String pathname = System.Windows.Forms.Application.StartupPath.ToString();
@@ -578,7 +587,8 @@ namespace Inv3
                         Name = partList[i].Name,
                         Count = partList[i].Count,
                         OficialCount = partList[i].OficialCount,
-                        TreeFullPath = partList[i].TreeFullPath
+                        TreeFullPath = partList[i].TreeFullPath,
+                        ParentTag = ""
                     });
                     count++;
                 }
@@ -676,12 +686,15 @@ namespace Inv3
             return -1;
         }
 
-
+        // ZMENI DATA POLOZKY V GRIDVIEW A NEBO PRIDA NOVY RADEK S NOVYMI DATY
         public Boolean ChangeItemGrid(PART item)
         {
+            // Pocet obsazenych radku v gridviewu
             int countRow = dataGridView1.Rows.Count;
+            // pomocna promenna
             int indexItem = -1;
-
+            // pokud jsou v nektere polozce :null: tak je nastav na "" prazdny text
+            // toto se vlastne dela aby nenastaly chyby pri praci prave s temito polozkami
             if (item.KMZ == null)
                 item.KMZ = "";
             if (item.PartNumber == null)
@@ -696,21 +709,26 @@ namespace Inv3
                 item.TreeFullPath = "";
             if (item.ParentTag == null)
                 item.ParentTag = "";
-
+            // projedu vsechny polozky zobrazene v gridviewu a poohledam se po aktualne zvolene
             for (int i = 0; i < countRow; i++)
             {
+                // pokud polozka neni nova- tedy vlastne pokud neni prazdna, tak...
                 if (!dataGridView1.Rows[i].IsNewRow)
                 {
+                    // ..jestliva obsahuje shodne KZM nebo PARTNUMBER
                     if ((dataGridView1.Rows[i].Cells[0].Value.ToString().Equals(item.KMZ.ToString())) &&
                         (dataGridView1.Rows[i].Cells[1].Value.ToString().Equals(item.PartNumber.ToString())))
                     {
+                        // ..tak ulozim jeji index a vyjedu z teto smycky ven
                         indexItem = i;
                         break;
                     }
                 }
             }
+            // no a nyni, pokud index neni -1 takze pokud nejakou polozku jsme nasli, tak..
             if (indexItem != -1)
             {
+                // zmenime jeji data dle dat obsazenych v parametru teto fce
                 dataGridView1.Rows[indexItem].Cells[0].Value = item.KMZ;
                 dataGridView1.Rows[indexItem].Cells[1].Value = item.PartNumber;
                 dataGridView1.Rows[indexItem].Cells[2].Value = item.Name;
@@ -725,16 +743,16 @@ namespace Inv3
                     dataGridView1.Rows[indexItem].Cells[4].Style.BackColor = Color.FromArgb(255, 100, 100);
                 dataGridView1.Rows[indexItem].Selected = true;
             }
+            // ALE JINAK, pokud v tabulce gridview neni...
             else
             {
-                //DataGridViewRow nRow = new DataGridViewRow();
+                // toto je pomocna promenna
                 int newIndexRow = 0;
-
+                // ..tak vlozime novy prazdny radek tabulky a ulozime si jeho index
                 dataGridView1.Invoke((MethodInvoker)delegate {
                     newIndexRow = dataGridView1.Rows.Add();
                 });
-
-                //int newIndexRow = dataGridView1.Rows.Add();
+                // a vlozime nova data do radku tabulky
                 dataGridView1.Rows[newIndexRow].Cells[0].Value = item.KMZ;
                 dataGridView1.Rows[newIndexRow].Cells[1].Value = item.PartNumber;
                 dataGridView1.Rows[newIndexRow].Cells[2].Value = item.Name;
@@ -749,6 +767,7 @@ namespace Inv3
                     dataGridView1.Rows[newIndexRow].Cells[4].Style.BackColor = Color.FromArgb(255, 100, 100);
                 dataGridView1.Rows[newIndexRow].Selected = true;
             }
+            // a ven
             return true;
         }
 
@@ -763,9 +782,9 @@ namespace Inv3
             if (item.Name == null)
                 item.Name = "";
             if (item.Count == null)
-                item.Count = "";
+                item.Count = "0";
             if (item.OficialCount == null)
-                item.OficialCount = "";
+                item.OficialCount = "0";
             if (item.TreeFullPath == null)
                 item.TreeFullPath = "";
             if (item.ParentTag == null)
@@ -778,8 +797,6 @@ namespace Inv3
             treeView1.Invoke((MethodInvoker)delegate {
                 treeSelectPath = treeView1.SelectedNode.FullPath;
             });
-
-            //String treeSelectPath = treeView1.SelectedNode.FullPath.ToString();
 
             // Zjistim, jestli bylo zadane i KMZ
             if (item.KMZ.Length > 0)
@@ -814,7 +831,7 @@ namespace Inv3
                         // Protoze v kolekci List<> nelze upravovat polozku primo, tak ji nejdrive odstranim
                         // a pote znovu pridam s upravenym poctem
                         partList.RemoveAt(indexPartList);
-                        partList.Add(saveItem);
+                        partList.Insert(indexPartList,saveItem);
                         ChangeItemGrid(saveItem);
                         Console.Beep(1500, 80);
                     }
@@ -839,7 +856,7 @@ namespace Inv3
                             // Protoze v kolekci List<> nelze upravovat polozku primo, tak ji nejdrive odstranim
                             // a pote znovu pridam s upravenym poctem
                             partList.RemoveAt(indexPartList);
-                            partList.Add(saveItem);
+                            partList.Insert(indexPartList,saveItem);
                             Console.Beep(1500, 80);
                             Console.Beep(1500, 80);
                         }
@@ -864,7 +881,7 @@ namespace Inv3
                                         // Protoze v kolekci List<> nelze upravovat polozku primo, tak ji nejdrive odstranim
                                         // a pote znovu pridam s upravenym poctem
                                         partList.RemoveAt(indexPartList);
-                                        partList.Add(saveItem);
+                                        partList.Insert(indexPartList,saveItem);
                                         Console.Beep(1500, 80);
                                         break;
                                     }
@@ -882,7 +899,7 @@ namespace Inv3
                                         // Protoze v kolekci List<> nelze upravovat polozku primo, tak ji nejdrive odstranim
                                         // a pote znovu pridam s upravenym poctem
                                         partList.RemoveAt(indexPartList);
-                                        partList.Add(saveItem);
+                                        partList.Insert(indexPartList,saveItem);
                                         ChangeItemGrid(saveItem);
                                         Console.Beep(1500, 80);
                                         Console.Beep(1500, 80);
@@ -987,6 +1004,15 @@ namespace Inv3
                 Console.Beep(500, 100);
                 return false;
             }
+            String countParts = "";
+            int countRow = this.dataGridView1.RowCount - 1;
+            countParts = countRow.ToString();
+            countParts += "/";
+            countParts += partList.Count.ToString();
+            countParts += "";
+            label3.Invoke((MethodInvoker)delegate {
+                label3.Text = countParts.ToString();
+            });
             return true;
         }
 
@@ -1118,6 +1144,7 @@ namespace Inv3
         private void serialPort1_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
             String data = serialPort1.ReadLine();
+            data = data.Replace("\r\n", "").Replace("\r", "").Replace("\n", "");
             AddPart(new PART
             {
                 KMZ = "",
@@ -1227,29 +1254,30 @@ namespace Inv3
         // EDITACE DILU
         private void button6_Click(object sender, EventArgs e)
         {
+            // pokud pocet radku neni nula
             if (dataGridView1.SelectedRows.Count != 0)
             {
+                // a pokud zvoleny radek neni :novy: 
                 if (!this.dataGridView1.SelectedRows[0].IsNewRow)
                 {
                     int indexPart = -1;
+                    // a pokud delka textu partnumber v tabulce neni 0
                     if (this.dataGridView1.SelectedRows[0].Cells[1].Value.ToString().Length > 0)
                     {
+                        // projedu vsecky dily v seznamu
                         for (int i = 0; i < partList.Count; i++)
                         {
+                            // a hledam dokud nenajdu shodu partnumbru z tabulky s PN z listu dilu
                             if (partList[i].PartNumber.Equals(this.dataGridView1.SelectedRows[0].Cells[1].Value.ToString()))
                             {
-                                try
-                                {
-                                    indexPart = i;
-                                    break;
-                                }
-                                catch
-                                {
-                                    break;
-                                }
+                                // pokud je, zapisu jeho index
+                                indexPart = i;
+                                // a ukoncim hledani
+                                break;
                             }
                         }
                     }
+                    // POKUD NENI delka textu PN vetsi nez 0, tak udelam to stejne ale tentokrate s KMZ
                     else
                     {
                         if (this.dataGridView1.SelectedRows[0].Cells[0].Value.ToString().Length > 0)
@@ -1258,19 +1286,13 @@ namespace Inv3
                             {
                                 if (partList[i].KMZ.Equals(this.dataGridView1.SelectedRows[0].Cells[0].Value.ToString()))
                                 {
-                                    try
-                                    {
-                                        indexPart = i;
-                                        break;
-                                    }
-                                    catch
-                                    {
-                                        break;
-                                    }
+                                    indexPart = i;
+                                    break;
                                 }
                             }
                         }
                     }
+                    // pokud mam index, tedy jsem nasel polozku, tak vse nahodim to editacniho formulare
                     if (indexPart != -1)
                     {
                         Form3 form = new Form3();
@@ -1312,15 +1334,18 @@ namespace Inv3
                         {
                             PART saveItem = new PART();
                             saveItem = partList[indexPart];
-                            //saveItem.KMZ = form.KMZ;
-                            //saveItem.PartNumber = form.partNumber;
                             saveItem.Name = form.partName;
                             saveItem.Count = form.partCount.ToString();
                             this.dataGridView1.Rows.Remove(this.dataGridView1.SelectedRows[0]);
                             partList.RemoveAt(indexPart);
-                            partList.Add(saveItem);
+                            partList.Insert(indexPart,saveItem);
                             ChangeItemGrid(saveItem);
                         }
+                    }
+                    // ALE pokud jsem polozku nenasel
+                    else
+                    {
+
                     }
                 }
             }
@@ -1337,6 +1362,19 @@ namespace Inv3
             {
                 this.treeView1.ShowLines = false;
                 setting.ShowLines = "false";
+            }
+            this.treeView1.Focus();
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox2.Checked)
+            {
+                setting.AutoRePath = "false";
+            }
+            else
+            {
+                setting.AutoRePath = "true";
             }
             this.treeView1.Focus();
         }
@@ -1384,6 +1422,16 @@ namespace Inv3
             Point pt = new Point();
             pt = treeView1.PointToClient(MousePosition);
             this.treeView1.SelectedNode = treeView1.GetNodeAt(pt);
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            this.treeView1.ExpandAll();
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            this.treeView1.CollapseAll();
         }
     }
 }

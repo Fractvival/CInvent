@@ -2,6 +2,6 @@ SKLAD
 import
 *.xlsx
 COM2
-true
+false
 true
 true

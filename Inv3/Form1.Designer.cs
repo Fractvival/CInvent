@@ -54,21 +54,6 @@ namespace Inv3
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.MenuSetting = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuSettingPort = new System.Windows.Forms.ToolStripMenuItem();
-            this.COM1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.COM2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.COM3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.COM4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.COM5 = new System.Windows.Forms.ToolStripMenuItem();
-            this.COM6 = new System.Windows.Forms.ToolStripMenuItem();
-            this.COM7 = new System.Windows.Forms.ToolStripMenuItem();
-            this.COM8 = new System.Windows.Forms.ToolStripMenuItem();
-            this.COM9 = new System.Windows.Forms.ToolStripMenuItem();
-            this.COM10 = new System.Windows.Forms.ToolStripMenuItem();
-            this.COM11 = new System.Windows.Forms.ToolStripMenuItem();
-            this.COM12 = new System.Windows.Forms.ToolStripMenuItem();
-            this.COM13 = new System.Windows.Forms.ToolStripMenuItem();
-            this.COM14 = new System.Windows.Forms.ToolStripMenuItem();
-            this.COM15 = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -86,6 +71,21 @@ namespace Inv3
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.button9 = new System.Windows.Forms.Button();
             this.button10 = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTip2 = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTip3 = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTip4 = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTip5 = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTip6 = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTip7 = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTip8 = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTip9 = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTip10 = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTip11 = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTip12 = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTip13 = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTip14 = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTip15 = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -185,7 +185,7 @@ namespace Inv3
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(80, 46);
             this.button2.TabIndex = 4;
-            this.button2.Text = "SMAZAT";
+            this.button2.Text = "SMAZAT POZICI";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -285,7 +285,7 @@ namespace Inv3
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(80, 46);
             this.button5.TabIndex = 8;
-            this.button5.Text = "SMAZAT";
+            this.button5.Text = "SMAZAT DÍL";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
@@ -337,116 +337,10 @@ namespace Inv3
             // 
             // MenuSettingPort
             // 
-            this.MenuSettingPort.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.COM1,
-            this.COM2,
-            this.COM3,
-            this.COM4,
-            this.COM5,
-            this.COM6,
-            this.COM7,
-            this.COM8,
-            this.COM9,
-            this.COM10,
-            this.COM11,
-            this.COM12,
-            this.COM13,
-            this.COM14,
-            this.COM15});
             this.MenuSettingPort.Name = "MenuSettingPort";
-            this.MenuSettingPort.Size = new System.Drawing.Size(156, 22);
+            this.MenuSettingPort.Size = new System.Drawing.Size(180, 22);
             this.MenuSettingPort.Text = "PORT SKENERU";
             this.MenuSettingPort.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.MenuSettingPort_DropDownItemClicked);
-            // 
-            // COM1
-            // 
-            this.COM1.Name = "COM1";
-            this.COM1.Size = new System.Drawing.Size(114, 22);
-            this.COM1.Text = "COM1";
-            // 
-            // COM2
-            // 
-            this.COM2.Name = "COM2";
-            this.COM2.Size = new System.Drawing.Size(114, 22);
-            this.COM2.Text = "COM2";
-            // 
-            // COM3
-            // 
-            this.COM3.Name = "COM3";
-            this.COM3.Size = new System.Drawing.Size(114, 22);
-            this.COM3.Text = "COM3";
-            // 
-            // COM4
-            // 
-            this.COM4.Name = "COM4";
-            this.COM4.Size = new System.Drawing.Size(114, 22);
-            this.COM4.Text = "COM4";
-            // 
-            // COM5
-            // 
-            this.COM5.Name = "COM5";
-            this.COM5.Size = new System.Drawing.Size(114, 22);
-            this.COM5.Text = "COM5";
-            // 
-            // COM6
-            // 
-            this.COM6.Name = "COM6";
-            this.COM6.Size = new System.Drawing.Size(114, 22);
-            this.COM6.Text = "COM6";
-            // 
-            // COM7
-            // 
-            this.COM7.Name = "COM7";
-            this.COM7.Size = new System.Drawing.Size(114, 22);
-            this.COM7.Text = "COM7";
-            // 
-            // COM8
-            // 
-            this.COM8.Name = "COM8";
-            this.COM8.Size = new System.Drawing.Size(114, 22);
-            this.COM8.Text = "COM8";
-            // 
-            // COM9
-            // 
-            this.COM9.Name = "COM9";
-            this.COM9.Size = new System.Drawing.Size(114, 22);
-            this.COM9.Text = "COM9";
-            // 
-            // COM10
-            // 
-            this.COM10.Name = "COM10";
-            this.COM10.Size = new System.Drawing.Size(114, 22);
-            this.COM10.Text = "COM10";
-            // 
-            // COM11
-            // 
-            this.COM11.Name = "COM11";
-            this.COM11.Size = new System.Drawing.Size(114, 22);
-            this.COM11.Text = "COM11";
-            // 
-            // COM12
-            // 
-            this.COM12.Name = "COM12";
-            this.COM12.Size = new System.Drawing.Size(114, 22);
-            this.COM12.Text = "COM12";
-            // 
-            // COM13
-            // 
-            this.COM13.Name = "COM13";
-            this.COM13.Size = new System.Drawing.Size(114, 22);
-            this.COM13.Text = "COM13";
-            // 
-            // COM14
-            // 
-            this.COM14.Name = "COM14";
-            this.COM14.Size = new System.Drawing.Size(114, 22);
-            this.COM14.Text = "COM14";
-            // 
-            // COM15
-            // 
-            this.COM15.Name = "COM15";
-            this.COM15.Size = new System.Drawing.Size(114, 22);
-            this.COM15.Text = "COM15";
             // 
             // statusStrip1
             // 
@@ -550,7 +444,7 @@ namespace Inv3
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(118, 6);
             // 
             // sMAZATToolStripMenuItem
             // 
@@ -562,12 +456,12 @@ namespace Inv3
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(118, 6);
             // 
             // eXPORTToolStripMenuItem
             // 
             this.eXPORTToolStripMenuItem.Name = "eXPORTToolStripMenuItem";
-            this.eXPORTToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.eXPORTToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.eXPORTToolStripMenuItem.Text = "EXPORT";
             this.eXPORTToolStripMenuItem.Click += new System.EventHandler(this.button3_Click);
             // 
@@ -671,21 +565,6 @@ namespace Inv3
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem MenuSetting;
         private System.Windows.Forms.ToolStripMenuItem MenuSettingPort;
-        private System.Windows.Forms.ToolStripMenuItem COM1;
-        private System.Windows.Forms.ToolStripMenuItem COM2;
-        private System.Windows.Forms.ToolStripMenuItem COM3;
-        private System.Windows.Forms.ToolStripMenuItem COM4;
-        private System.Windows.Forms.ToolStripMenuItem COM5;
-        private System.Windows.Forms.ToolStripMenuItem COM6;
-        private System.Windows.Forms.ToolStripMenuItem COM7;
-        private System.Windows.Forms.ToolStripMenuItem COM8;
-        private System.Windows.Forms.ToolStripMenuItem COM9;
-        private System.Windows.Forms.ToolStripMenuItem COM10;
-        private System.Windows.Forms.ToolStripMenuItem COM11;
-        private System.Windows.Forms.ToolStripMenuItem COM12;
-        private System.Windows.Forms.ToolStripMenuItem COM13;
-        private System.Windows.Forms.ToolStripMenuItem COM14;
-        private System.Windows.Forms.ToolStripMenuItem COM15;
         private System.Windows.Forms.DataGridViewTextBoxColumn KMZ;
         private System.Windows.Forms.DataGridViewTextBoxColumn PartNumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn PartName;
@@ -709,6 +588,21 @@ namespace Inv3
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.Button button10;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.ToolTip toolTip2;
+        private System.Windows.Forms.ToolTip toolTip3;
+        private System.Windows.Forms.ToolTip toolTip4;
+        private System.Windows.Forms.ToolTip toolTip5;
+        private System.Windows.Forms.ToolTip toolTip6;
+        private System.Windows.Forms.ToolTip toolTip7;
+        private System.Windows.Forms.ToolTip toolTip8;
+        private System.Windows.Forms.ToolTip toolTip9;
+        private System.Windows.Forms.ToolTip toolTip10;
+        private System.Windows.Forms.ToolTip toolTip11;
+        private System.Windows.Forms.ToolTip toolTip12;
+        private System.Windows.Forms.ToolTip toolTip13;
+        private System.Windows.Forms.ToolTip toolTip14;
+        private System.Windows.Forms.ToolTip toolTip15;
     }
 }
 

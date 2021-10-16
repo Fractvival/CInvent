@@ -392,6 +392,23 @@ namespace Inv3
         {
             InitializeComponent();
 
+            this.toolTip5.SetToolTip(this.button1, "Přidá novou pozici do seznamu v aktuálně zvolené pozici");
+            this.toolTip6.SetToolTip(this.button2, "ODSTRANÍ ZVOLENOU POZICI VČETNĚ PODPOZIC A OBSAŽENÝCH DÍLŮ !!");
+            this.toolTip7.SetToolTip(this.button3, "Provede export dílů ve zvolené pozici včetně podpozic do XLSX souboru");
+            this.toolTip8.SetToolTip(this.button4, "Přidá nový díl do zvolené pozice");
+            this.toolTip9.SetToolTip(this.button5, "ODSTRANÍ ZVOLENÝ DÍL Z AKTUÁLNÍ POZICE !!");
+            this.toolTip10.SetToolTip(this.button6, "Editace zvoleného dílu");
+            this.toolTip11.SetToolTip(this.checkBox1, "Přepnutí zobrazování ¨linek a uzlů/celého řádku¨ v seznamu pozic");
+            this.toolTip12.SetToolTip(this.checkBox2, "Zobrazovat dialog s možností výběru akce před připsáním existujícího dílu v jiné pozici");
+            this.toolTip13.SetToolTip(this.label5, "Aktuálně zvolená pozice");
+            this.toolTip14.SetToolTip(this.label3, "Počet dílů ve zvolené pozici/celkem");
+            this.toolTip15.SetToolTip(this.label4, "Počet podpozic ve zvolené pozici/všech celkem obsažených");
+            this.toolTip4.SetToolTip(this.button7, "Přesune zvolenou pozici směrem dolů");
+            this.toolTip3.SetToolTip(this.button8, "Přesune zvolenou pozici směrem nahoru");
+            this.toolTip1.SetToolTip(this.button9, "Rozbalí všechny uzly v seznamu pozic");
+            this.toolTip2.SetToolTip(this.button10, "Sbalí všechny uzly v seznamu pozic");
+            //this.toolTip1.SetToolTip(this.treeView1, "Seznam pozic a ");
+
             LoadSetting();
             InitPort();
             LoadPart();

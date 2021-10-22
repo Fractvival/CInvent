@@ -1,0 +1,7 @@
+SKLAD
+import
+*.xlsx
+COM2
+false
+true
+true

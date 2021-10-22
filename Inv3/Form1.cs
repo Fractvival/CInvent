@@ -38,6 +38,7 @@ namespace Inv3
             // true = ano, false = bude se zobrazovat potvrzovaci dialog
             public String AutoAddInfo;
             public String ShowLines;
+            public String GlobalInfo;
         }
 
         public struct PART
@@ -82,7 +83,8 @@ namespace Inv3
             ImportFolder = "import",
             AutoRePath = "true",
             AutoAddInfo = "true",
-            ShowLines = "true"
+            ShowLines = "true",
+            GlobalInfo = "Napsat globální poznámku"
         };
         // Toto je pomocna promenna s plnou cestou a nazvem souboru ofiko skladu (doplneno dale takze nemenit)
         String Katalog = "";
@@ -221,6 +223,7 @@ namespace Inv3
                 writer.WriteLine(setting.AutoRePath);
                 writer.WriteLine(setting.AutoAddInfo);
                 writer.WriteLine(setting.ShowLines);
+                writer.Write(setting.GlobalInfo);
                 writer.Close();
             }
             catch
@@ -245,6 +248,7 @@ namespace Inv3
                 setting.AutoRePath = reader.ReadLine();
                 setting.AutoAddInfo = reader.ReadLine();
                 setting.ShowLines = reader.ReadLine();
+                setting.GlobalInfo = reader.ReadToEnd();
                 reader.Close();
             }
             catch
@@ -516,6 +520,9 @@ namespace Inv3
                     SavePart();
                 }
             }
+            if (setting.GlobalInfo.Length == 0)
+                setting.GlobalInfo = "Napsat globální poznámku";
+            this.textBox1.Text = setting.GlobalInfo;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -617,6 +624,14 @@ namespace Inv3
             countParts += "";
             label3.Text = countParts.ToString();
             label5.Text = treeView1.SelectedNode.FullPath;
+            if (e.Node.IsExpanded)
+            {
+                e.Node.Collapse();
+            }
+            else
+            {
+                e.Node.Expand();
+            }
         }
 
         // Prohleda databazi zadanych/nactenych dilu na existenci KMZ
@@ -752,12 +767,14 @@ namespace Inv3
                 dataGridView1.Rows[indexItem].Cells[3].Value = item.Count;
                 dataGridView1.Rows[indexItem].Cells[4].Value = item.OficialCount;
                 dataGridView1.Rows[indexItem].Cells[5].Value = item.TreeFullPath;
-                if (Int32.Parse(item.Count) <= 0)
-                    dataGridView1.Rows[indexItem].Cells[3].Style.BackColor = Color.FromArgb(255, 180, 180);
-                if (Int32.Parse(item.Count) > 0)
-                    dataGridView1.Rows[indexItem].Cells[3].Style.BackColor = Color.FromArgb(180, 255, 180);
                 if (Int32.Parse(item.Count) < Int32.Parse(item.OficialCount))
-                    dataGridView1.Rows[indexItem].Cells[4].Style.BackColor = Color.FromArgb(255, 100, 100);
+                    dataGridView1.Rows[indexItem].Cells[3].Style.BackColor = Color.FromArgb(255, 128, 128);
+                else if (Int32.Parse(item.Count) == Int32.Parse(item.OficialCount))
+                    dataGridView1.Rows[indexItem].Cells[3].Style.BackColor = Color.FromArgb(204, 255, 204);
+                else if (Int32.Parse(item.Count) > Int32.Parse(item.OficialCount))
+                    dataGridView1.Rows[indexItem].Cells[3].Style.BackColor = Color.FromArgb(51, 204, 204);
+                else
+                    dataGridView1.Rows[indexItem].Cells[3].Style.BackColor = Color.FromArgb(192, 192, 192);
                 dataGridView1.Rows[indexItem].Selected = true;
             }
             // ALE JINAK, pokud v tabulce gridview neni...
@@ -776,12 +793,14 @@ namespace Inv3
                 dataGridView1.Rows[newIndexRow].Cells[3].Value = item.Count;
                 dataGridView1.Rows[newIndexRow].Cells[4].Value = item.OficialCount;
                 dataGridView1.Rows[newIndexRow].Cells[5].Value = item.TreeFullPath;
-                if (Int32.Parse(item.Count) <= 0)
-                    dataGridView1.Rows[newIndexRow].Cells[3].Style.BackColor = Color.FromArgb(255, 180, 180);
-                if (Int32.Parse(item.Count) > 0)
-                    dataGridView1.Rows[newIndexRow].Cells[3].Style.BackColor = Color.FromArgb(180, 255, 180);
                 if (Int32.Parse(item.Count) < Int32.Parse(item.OficialCount))
-                    dataGridView1.Rows[newIndexRow].Cells[4].Style.BackColor = Color.FromArgb(255, 100, 100);
+                    dataGridView1.Rows[newIndexRow].Cells[3].Style.BackColor = Color.FromArgb(255, 128, 128);
+                else if (Int32.Parse(item.Count) == Int32.Parse(item.OficialCount))
+                    dataGridView1.Rows[newIndexRow].Cells[3].Style.BackColor = Color.FromArgb(204, 255, 204);
+                else if (Int32.Parse(item.Count) > Int32.Parse(item.OficialCount))
+                    dataGridView1.Rows[newIndexRow].Cells[3].Style.BackColor = Color.FromArgb(51, 204, 204);
+                else
+                    dataGridView1.Rows[newIndexRow].Cells[3].Style.BackColor = Color.FromArgb(192, 192, 192);
                 dataGridView1.Rows[newIndexRow].Selected = true;
             }
             // a ven
@@ -1083,6 +1102,7 @@ namespace Inv3
                                 "\r\n\r\nEXPORT NEBUDE PROVEDEN", "SOUBOR JE NEDOSTUPNY", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             return;
                         }
+
                     var workBooks = excel.Workbooks;
                     var workBook = workBooks.Add();
                     var workSheet = (Excel.Worksheet)excel.ActiveSheet;
@@ -1147,6 +1167,16 @@ namespace Inv3
                             workSheet.Cells[i + 2, "F"] = pos.ToString(); //partList[i].TreeFullPath;
                         }
                     }
+                    DialogResult addKat = MessageBox.Show("ZAHRNOUT  I  LIST  S  OFICIÁLNÍM  KATALOGEM ?", "EXPORT", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (addKat == DialogResult.Yes)
+                    {
+                        var oficialBook = excel.Workbooks.Open(Katalog, 0, true, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, false, 1, 0);
+                        var oficialSheet = oficialBook.Worksheets.get_Item(1);
+                        var destSheet = workBook.Worksheets[2];
+                        oficialSheet.Copy(destSheet);
+                        oficialBook.Close();
+                    }
+                    workSheet.Activate();
                     workBook.SaveAs(pathname, Excel.XlFileFormat.xlOpenXMLWorkbook, ReadOnlyRecommended: false);
                     workBooks.Close();
                     MessageBox.Show("EXPORT BYL ÚSPĚSNĚ DOKONČEN", "EXPORT", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1450,5 +1480,11 @@ namespace Inv3
         {
             this.treeView1.CollapseAll();
         }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            setting.GlobalInfo = this.textBox1.Text;
+        }
+
     }
 }

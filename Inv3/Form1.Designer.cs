@@ -31,6 +31,12 @@ namespace Inv3
         {
             this.components = new System.ComponentModel.Container();
             this.treeView1 = new System.Windows.Forms.TreeView();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.pŘIDATToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.sMAZATToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.eXPORTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -62,12 +68,6 @@ namespace Inv3
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.button7 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.pŘIDATToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.sMAZATToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.eXPORTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.button9 = new System.Windows.Forms.Button();
             this.button10 = new System.Windows.Forms.Button();
@@ -86,18 +86,20 @@ namespace Inv3
             this.toolTip13 = new System.Windows.Forms.ToolTip(this.components);
             this.toolTip14 = new System.Windows.Forms.ToolTip(this.components);
             this.toolTip15 = new System.Windows.Forms.ToolTip(this.components);
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.contextMenuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
-            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // treeView1
             // 
             this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.treeView1.BackColor = System.Drawing.SystemColors.Info;
             this.treeView1.ContextMenuStrip = this.contextMenuStrip1;
             this.treeView1.Font = new System.Drawing.Font("Consolas", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.treeView1.FullRowSelect = true;
@@ -109,10 +111,55 @@ namespace Inv3
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.pŘIDATToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.sMAZATToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.eXPORTToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(122, 82);
+            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            // 
+            // pŘIDATToolStripMenuItem
+            // 
+            this.pŘIDATToolStripMenuItem.Name = "pŘIDATToolStripMenuItem";
+            this.pŘIDATToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            this.pŘIDATToolStripMenuItem.Text = "PŘIDAT";
+            this.pŘIDATToolStripMenuItem.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(118, 6);
+            // 
+            // sMAZATToolStripMenuItem
+            // 
+            this.sMAZATToolStripMenuItem.Name = "sMAZATToolStripMenuItem";
+            this.sMAZATToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            this.sMAZATToolStripMenuItem.Text = "SMAZAT";
+            this.sMAZATToolStripMenuItem.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(118, 6);
+            // 
+            // eXPORTToolStripMenuItem
+            // 
+            this.eXPORTToolStripMenuItem.Name = "eXPORTToolStripMenuItem";
+            this.eXPORTToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            this.eXPORTToolStripMenuItem.Text = "EXPORT";
+            this.eXPORTToolStripMenuItem.Click += new System.EventHandler(this.button3_Click);
+            // 
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.groupBox1.Controls.Add(this.textBox1);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
@@ -129,7 +176,7 @@ namespace Inv3
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label4.Location = new System.Drawing.Point(192, 61);
+            this.label4.Location = new System.Drawing.Point(172, 61);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(20, 22);
             this.label4.TabIndex = 3;
@@ -139,7 +186,7 @@ namespace Inv3
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label3.Location = new System.Drawing.Point(192, 28);
+            this.label3.Location = new System.Drawing.Point(172, 28);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(20, 22);
             this.label3.TabIndex = 2;
@@ -149,7 +196,7 @@ namespace Inv3
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label2.Location = new System.Drawing.Point(26, 61);
+            this.label2.Location = new System.Drawing.Point(6, 61);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(140, 22);
             this.label2.TabIndex = 1;
@@ -159,7 +206,7 @@ namespace Inv3
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label1.Location = new System.Drawing.Point(26, 28);
+            this.label1.Location = new System.Drawing.Point(6, 28);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(160, 22);
             this.label1.TabIndex = 0;
@@ -195,6 +242,7 @@ namespace Inv3
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
             this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dataGridView1.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -298,6 +346,7 @@ namespace Inv3
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.BackColor = System.Drawing.SystemColors.ControlLight;
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.groupBox2.Location = new System.Drawing.Point(385, 124);
@@ -338,7 +387,7 @@ namespace Inv3
             // MenuSettingPort
             // 
             this.MenuSettingPort.Name = "MenuSettingPort";
-            this.MenuSettingPort.Size = new System.Drawing.Size(180, 22);
+            this.MenuSettingPort.Size = new System.Drawing.Size(156, 22);
             this.MenuSettingPort.Text = "PORT SKENERU";
             this.MenuSettingPort.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.MenuSettingPort_DropDownItemClicked);
             // 
@@ -422,49 +471,6 @@ namespace Inv3
             this.button8.UseVisualStyleBackColor = true;
             this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.pŘIDATToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.sMAZATToolStripMenuItem,
-            this.toolStripSeparator2,
-            this.eXPORTToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(122, 82);
-            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
-            // 
-            // pŘIDATToolStripMenuItem
-            // 
-            this.pŘIDATToolStripMenuItem.Name = "pŘIDATToolStripMenuItem";
-            this.pŘIDATToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
-            this.pŘIDATToolStripMenuItem.Text = "PŘIDAT";
-            this.pŘIDATToolStripMenuItem.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(118, 6);
-            // 
-            // sMAZATToolStripMenuItem
-            // 
-            this.sMAZATToolStripMenuItem.Name = "sMAZATToolStripMenuItem";
-            this.sMAZATToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
-            this.sMAZATToolStripMenuItem.Text = "SMAZAT";
-            this.sMAZATToolStripMenuItem.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(118, 6);
-            // 
-            // eXPORTToolStripMenuItem
-            // 
-            this.eXPORTToolStripMenuItem.Name = "eXPORTToolStripMenuItem";
-            this.eXPORTToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
-            this.eXPORTToolStripMenuItem.Text = "EXPORT";
-            this.eXPORTToolStripMenuItem.Click += new System.EventHandler(this.button3_Click);
-            // 
             // checkBox2
             // 
             this.checkBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -502,6 +508,25 @@ namespace Inv3
             this.button10.UseVisualStyleBackColor = true;
             this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
+            // textBox1
+            // 
+            this.textBox1.AcceptsReturn = true;
+            this.textBox1.AcceptsTab = true;
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox1.BackColor = System.Drawing.SystemColors.Info;
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBox1.ForeColor = System.Drawing.SystemColors.InfoText;
+            this.textBox1.HideSelection = false;
+            this.textBox1.Location = new System.Drawing.Point(295, 26);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textBox1.Size = new System.Drawing.Size(222, 65);
+            this.textBox1.TabIndex = 4;
+            this.textBox1.Text = "Napsat globální poznámku";
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -531,6 +556,7 @@ namespace Inv3
             this.Text = "EasySklad";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
@@ -540,7 +566,6 @@ namespace Inv3
             this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -603,6 +628,7 @@ namespace Inv3
         private System.Windows.Forms.ToolTip toolTip13;
         private System.Windows.Forms.ToolTip toolTip14;
         private System.Windows.Forms.ToolTip toolTip15;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 
